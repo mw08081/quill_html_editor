@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:quill_html_editor/src/constants/image_constants.dart';
 import 'package:quill_html_editor/src/utils/hex_color.dart';
-import 'package:quill_html_editor/src/widgets/color_picker.dart';
 import 'package:quill_html_editor/src/widgets/image_picker.dart';
 import 'package:quill_html_editor/src/widgets/table_picker.dart';
 import 'package:quill_html_editor/src/widgets/webviewx/src/webviewx_plus.dart';
@@ -316,6 +315,84 @@ class ToolBar extends StatefulWidget {
 
 ///[ToolBarState] state object to access the apis of toolbar
 class ToolBarState extends State<ToolBar> {
+  /// font color list
+  final List<Color> fontColors = [
+    const Color(0xFFFFFFFF), // #FFFFFF -> 서식취소로 변경
+    const Color(0xFF555555), // #333333
+    const Color(0xFF666666), // #666666
+    const Color(0xFF888888), // #888888
+    const Color(0xFF9D9D9D), // #9D9D9D
+    const Color(0xFFDDDDDD), // #DDDDDD
+    const Color(0xFFFFFFFF), // #FFFFFF
+    const Color(0xFFEE2323), // #EE2323
+    const Color(0xFFF89009), // #F89009
+    const Color(0xFFF3C000), // #F3C000
+    const Color(0xFF0DB4A0), // #0DB4A0
+    const Color(0xFF006DD7), // #006DD7
+    const Color(0xFF8A3DB6), // #8A3DB6
+    const Color(0xFF72889C), // #72889C
+    const Color(0xFFFFC1C8), // #ffc1c8
+    const Color(0xFFFFC9AF), // #ffc9af
+    const Color(0xFFF6E199), // #f6e199
+    const Color(0xFF9FEEC3), // #9feec3
+    const Color(0xFF99CEFA), // #99cefa
+    const Color(0xFFC1BEF9), // #c1bef9
+    const Color(0xFFC0D1E7), // #c0d1e7
+    const Color(0xFFEF5369), // #ef5369
+    const Color(0xFFEF6F53), // #ef6f53
+    const Color(0xFFA6BC00), // #a6bc00
+    const Color(0xFF409D00), // #409d00
+    const Color(0xFF0493D3), // #0493d3
+    const Color(0xFF6164C6), // #6164c6
+    const Color(0xFF8CB3BE), // #8cb3be
+    const Color(0xFF781B34), // #781b34
+    const Color(0xFF953B35), // #953b35
+    const Color(0xFF5F6D2C), // #5f6d2c
+    const Color(0xFF1B711C), // #1b711c
+    const Color(0xFF1A5490), // #1a5490
+    const Color(0xFF5733B1), // #5733b1
+    const Color(0xFF456771) // #456771
+  ];
+
+  /// background color list
+  final List<Color> bgColors = [
+    const Color(0xFFFFFFFF), // #FFFFFF -> 서식취소로 변경
+    const Color(0xFF000000), // #000000
+    const Color(0xFF555555), // #555555
+    const Color(0xFF666666), // #666666
+    const Color(0xFF888888), // #888888
+    const Color(0xFF9D9D9D), // #9D9D9D
+    const Color(0xFFDDDDDD), // #DDDDDD
+    const Color(0xFFEE2323), // #EE2323
+    const Color(0xFFF89009), // #F89009
+    const Color(0xFFF3C000), // #F3C000
+    const Color(0xFF0DB4A0), // #0DB4A0
+    const Color(0xFF006DD7), // #006DD7
+    const Color(0xFF8A3DB6), // #8A3DB6
+    const Color(0xFF72889C), // #72889C
+    const Color(0xFFFFC1C8), // #ffc1c8
+    const Color(0xFFFFC9AF), // #ffc9af
+    const Color(0xFFF6E199), // #f6e199
+    const Color(0xFF9FEEC3), // #9feec3
+    const Color(0xFF99CEFA), // #99cefa
+    const Color(0xFFC1BEF9), // #c1bef9
+    const Color(0xFFC0D1E7), // #c0d1e7
+    const Color(0xFFEF5369), // #ef5369
+    const Color(0xFFEF6F53), // #ef6f53
+    const Color(0xFFA6BC00), // #a6bc00
+    const Color(0xFF409D00), // #409d00
+    const Color(0xFF0493D3), // #0493d3
+    const Color(0xFF6164C6), // #6164c6
+    const Color(0xFF8CB3BE), // #8cb3be
+    const Color(0xFF781B34), // #781b34
+    const Color(0xFF953B35), // #953b35
+    const Color(0xFF5F6D2C), // #5f6d2c
+    const Color(0xFF1B711C), // #1b711c
+    const Color(0xFF1A5490), // #1a5490
+    const Color(0xFF5733B1), // #5733b1
+    const Color(0xFF456771) // #456771
+  ];
+
   List<ToolBarItem> _toolbarList = [];
   Map<String, dynamic> _formatMap = {};
   late GlobalKey<ElTooltipState> _fontBgColorKey;
@@ -875,82 +952,6 @@ class ToolBarState extends State<ToolBar> {
       ),
     );
   }
-
-  final List<Color> fontColors = [
-    Color(0xFFFFFFFF), // #FFFFFF -> 서식취소로 변경
-    Color(0xFF555555), // #333333
-    Color(0xFF666666), // #666666
-    Color(0xFF888888), // #888888
-    Color(0xFF9D9D9D), // #9D9D9D
-    Color(0xFFDDDDDD), // #DDDDDD
-    Color(0xFFFFFFFF), // #FFFFFF
-    Color(0xFFEE2323), // #EE2323
-    Color(0xFFF89009), // #F89009
-    Color(0xFFF3C000), // #F3C000
-    Color(0xFF0DB4A0), // #0DB4A0
-    Color(0xFF006DD7), // #006DD7
-    Color(0xFF8A3DB6), // #8A3DB6
-    Color(0xFF72889C), // #72889C
-    Color(0xFFFFC1C8), // #ffc1c8
-    Color(0xFFFFC9AF), // #ffc9af
-    Color(0xFFF6E199), // #f6e199
-    Color(0xFF9FEEC3), // #9feec3
-    Color(0xFF99CEFA), // #99cefa
-    Color(0xFFC1BEF9), // #c1bef9
-    Color(0xFFC0D1E7), // #c0d1e7
-    Color(0xFFEF5369), // #ef5369
-    Color(0xFFEF6F53), // #ef6f53
-    Color(0xFFA6BC00), // #a6bc00
-    Color(0xFF409D00), // #409d00
-    Color(0xFF0493D3), // #0493d3
-    Color(0xFF6164C6), // #6164c6
-    Color(0xFF8CB3BE), // #8cb3be
-    Color(0xFF781B34), // #781b34
-    Color(0xFF953B35), // #953b35
-    Color(0xFF5F6D2C), // #5f6d2c
-    Color(0xFF1B711C), // #1b711c
-    Color(0xFF1A5490), // #1a5490
-    Color(0xFF5733B1), // #5733b1
-    Color(0xFF456771) // #456771
-  ];
-
-  final List<Color> bgColors = [
-    Color(0xFFFFFFFF), // #FFFFFF -> 서식취소로 변경
-    Color(0xFF000000), // #000000
-    Color(0xFF555555), // #555555
-    Color(0xFF666666), // #666666
-    Color(0xFF888888), // #888888
-    Color(0xFF9D9D9D), // #9D9D9D
-    Color(0xFFDDDDDD), // #DDDDDD
-    Color(0xFFEE2323), // #EE2323
-    Color(0xFFF89009), // #F89009
-    Color(0xFFF3C000), // #F3C000
-    Color(0xFF0DB4A0), // #0DB4A0
-    Color(0xFF006DD7), // #006DD7
-    Color(0xFF8A3DB6), // #8A3DB6
-    Color(0xFF72889C), // #72889C
-    Color(0xFFFFC1C8), // #ffc1c8
-    Color(0xFFFFC9AF), // #ffc9af
-    Color(0xFFF6E199), // #f6e199
-    Color(0xFF9FEEC3), // #9feec3
-    Color(0xFF99CEFA), // #99cefa
-    Color(0xFFC1BEF9), // #c1bef9
-    Color(0xFFC0D1E7), // #c0d1e7
-    Color(0xFFEF5369), // #ef5369
-    Color(0xFFEF6F53), // #ef6f53
-    Color(0xFFA6BC00), // #a6bc00
-    Color(0xFF409D00), // #409d00
-    Color(0xFF0493D3), // #0493d3
-    Color(0xFF6164C6), // #6164c6
-    Color(0xFF8CB3BE), // #8cb3be
-    Color(0xFF781B34), // #781b34
-    Color(0xFF953B35), // #953b35
-    Color(0xFF5F6D2C), // #5f6d2c
-    Color(0xFF1B711C), // #1b711c
-    Color(0xFF1A5490), // #1a5490
-    Color(0xFF5733B1), // #5733b1
-    Color(0xFF456771) // #456771
-  ];
 
   Widget _getFontColorWidget(int i) {
     return ElTooltip(
