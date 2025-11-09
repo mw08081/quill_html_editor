@@ -270,8 +270,8 @@ class ToolBar extends StatefulWidget {
     this.activeIconColor = Colors.blue,
     this.toolBarColor = Colors.white,
     this.mainAxisSize,
-  })  : assert(crossAxisAlignment is WrapCrossAlignment,
-            "Please pass WrapCrossAlignment, instead of CrossAxisAlignment"),
+  })  : assert(
+            crossAxisAlignment is WrapCrossAlignment, "Please pass WrapCrossAlignment, instead of CrossAxisAlignment"),
         mainAxisAlignment = MainAxisAlignment.start,
         textBaseline = TextBaseline.alphabetic,
         _isScrollable = false,
@@ -300,8 +300,8 @@ class ToolBar extends StatefulWidget {
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.mainAxisSize = MainAxisSize.min,
     this.textBaseline = TextBaseline.alphabetic,
-  })  : assert(crossAxisAlignment is CrossAxisAlignment,
-            "Please pass CrossAxisAlignment, instead of WrapCrossAlignment"),
+  })  : assert(
+            crossAxisAlignment is CrossAxisAlignment, "Please pass CrossAxisAlignment, instead of WrapCrossAlignment"),
         spacing = 0.0,
         runSpacing = 0.0,
         alignment = WrapAlignment.start,
@@ -325,12 +325,9 @@ class ToolBarState extends State<ToolBar> {
 
   @override
   void initState() {
-    _fontBgColorKey = GlobalKey<ElTooltipState>(
-        debugLabel: 'fontBgColorKey${widget.controller.hashCode.toString()}');
-    _fontColorKey = GlobalKey<ElTooltipState>(
-        debugLabel: 'fontColorKey${widget.controller.hashCode.toString()}');
-    _tablePickerKey = GlobalKey<ElTooltipState>(
-        debugLabel: '_tablePickerKey${widget.controller.hashCode.toString()}');
+    _fontBgColorKey = GlobalKey<ElTooltipState>(debugLabel: 'fontBgColorKey${widget.controller.hashCode.toString()}');
+    _fontColorKey = GlobalKey<ElTooltipState>(debugLabel: 'fontColorKey${widget.controller.hashCode.toString()}');
+    _tablePickerKey = GlobalKey<ElTooltipState>(debugLabel: '_tablePickerKey${widget.controller.hashCode.toString()}');
 
     if (widget.padding != null) {
       _buttonPadding = widget.padding!;
@@ -357,6 +354,7 @@ class ToolBarState extends State<ToolBar> {
             padding: _buttonPadding));
       }
     }
+
     super.initState();
   }
 
@@ -410,67 +408,53 @@ class ToolBarState extends State<ToolBar> {
   ///[updateToolBarFormat] method to update the toolbar state in sync with editor formats
   void updateToolBarFormat(Map<String, dynamic> formatMap) {
     _formatMap = formatMap;
+
     for (int i = 0; i < _toolbarList.length; i++) {
       switch (_toolbarList[i].style) {
         case ToolBarStyle.bold:
-          _toolbarList[i] =
-              _toolbarList[i].copyWith(isActive: formatMap['bold'] == true);
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['bold'] == true);
           break;
         case ToolBarStyle.italic:
-          _toolbarList[i] =
-              _toolbarList[i].copyWith(isActive: formatMap['italic'] == true);
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['italic'] == true);
           break;
         case ToolBarStyle.underline:
-          _toolbarList[i] = _toolbarList[i]
-              .copyWith(isActive: formatMap['underline'] == true);
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['underline'] == true);
           break;
         case ToolBarStyle.strike:
-          _toolbarList[i] =
-              _toolbarList[i].copyWith(isActive: formatMap['strike'] == true);
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['strike'] == true);
           break;
         case ToolBarStyle.blockQuote:
-          _toolbarList[i] = _toolbarList[i]
-              .copyWith(isActive: formatMap['blockquote'] == true);
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['blockquote'] == true);
           break;
         case ToolBarStyle.codeBlock:
-          _toolbarList[i] = _toolbarList[i]
-              .copyWith(isActive: formatMap['code-block'] == true);
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['code-block'] == true);
           break;
         case ToolBarStyle.indentMinus:
-          _toolbarList[i] =
-              _toolbarList[i].copyWith(isActive: formatMap['indent'] != null);
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['indent'] != null);
           break;
         case ToolBarStyle.indentAdd:
-          _toolbarList[i] =
-              _toolbarList[i].copyWith(isActive: formatMap['indent'] != null);
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['indent'] != null);
           break;
         case ToolBarStyle.directionRtl:
-          _toolbarList[i] = _toolbarList[i]
-              .copyWith(isActive: formatMap['direction'] == 'rtl');
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['direction'] == 'rtl');
           break;
         case ToolBarStyle.directionLtr:
-          _toolbarList[i] = _toolbarList[i]
-              .copyWith(isActive: formatMap['direction'] != 'rtl');
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['direction'] != 'rtl');
           break;
         case ToolBarStyle.size:
-          _toolbarList[i] =
-              _toolbarList[i].copyWith(isActive: formatMap['size'] != null);
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['size'] != null);
           break;
         case ToolBarStyle.headerOne:
-          _toolbarList[i] =
-              _toolbarList[i].copyWith(isActive: formatMap['header'] == 1);
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['header'] == 1);
           break;
         case ToolBarStyle.headerTwo:
-          _toolbarList[i] =
-              _toolbarList[i].copyWith(isActive: formatMap['header'] == 2);
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['header'] == 2);
           break;
         case ToolBarStyle.color:
-          _toolbarList[i] =
-              _toolbarList[i].copyWith(isActive: formatMap['color'] != null);
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['color'] != null);
           try {
             if (formatMap['color'] != null) {
-              if (formatMap['color'].runtimeType.toString() ==
-                  'List<dynamic>') {
+              if (formatMap['color'].runtimeType.toString() == 'List<dynamic>') {
                 _formatMap['color'] = formatMap['color'][0];
               } else {
                 _formatMap['color'] = formatMap['color'];
@@ -484,36 +468,28 @@ class ToolBarState extends State<ToolBar> {
           break;
         case ToolBarStyle.align:
           formatMap['align'] ??= '';
-          _toolbarList[i] =
-              _toolbarList[i].copyWith(isActive: formatMap['align'] != null);
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['align'] != null);
           break;
         case ToolBarStyle.listOrdered:
-          _toolbarList[i] = _toolbarList[i]
-              .copyWith(isActive: formatMap['list'] == 'ordered');
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['list'] == 'ordered');
           break;
         case ToolBarStyle.listBullet:
-          _toolbarList[i] =
-              _toolbarList[i].copyWith(isActive: formatMap['list'] == 'bullet');
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['list'] == 'bullet');
           break;
         case ToolBarStyle.image:
-          _toolbarList[i] =
-              _toolbarList[i].copyWith(isActive: formatMap['image'] != null);
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['image'] != null);
           break;
         case ToolBarStyle.video:
-          _toolbarList[i] =
-              _toolbarList[i].copyWith(isActive: formatMap['video'] != null);
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['video'] != null);
           break;
         case ToolBarStyle.clean:
-          _toolbarList[i] =
-              _toolbarList[i].copyWith(isActive: formatMap['clean'] != null);
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['clean'] != null);
           break;
         case ToolBarStyle.background:
-          _toolbarList[i] = _toolbarList[i]
-              .copyWith(isActive: formatMap['background'] != null);
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['background'] != null);
           try {
             if (formatMap['background'] != null) {
-              if (formatMap['background'].runtimeType.toString() ==
-                  'List<dynamic>') {
+              if (formatMap['background'].runtimeType.toString() == 'List<dynamic>') {
                 _formatMap['background'] = formatMap['background'][0];
               } else {
                 _formatMap['background'] = formatMap['background'];
@@ -559,10 +535,7 @@ class ToolBarState extends State<ToolBar> {
             message: toolbarItem.style.name,
             child: Padding(
               padding: _buttonPadding,
-              child: SizedBox(
-                  width: widget.iconSize,
-                  height: widget.iconSize,
-                  child: _alignDD()),
+              child: SizedBox(width: widget.iconSize, height: widget.iconSize, child: _alignDD()),
             )));
       } else if (toolbarItem.style == ToolBarStyle.color) {
         tempToolBarList.add(Tooltip(
@@ -570,10 +543,7 @@ class ToolBarState extends State<ToolBar> {
             message: toolbarItem.style.name,
             child: Padding(
               padding: _buttonPadding,
-              child: SizedBox(
-                  width: widget.iconSize,
-                  height: widget.iconSize,
-                  child: _getFontColorWidget(i)),
+              child: SizedBox(width: widget.iconSize, height: widget.iconSize, child: _getFontColorWidget(i)),
             )));
       } else if (toolbarItem.style == ToolBarStyle.video) {
         tempToolBarList.add(Tooltip(
@@ -624,10 +594,7 @@ class ToolBarState extends State<ToolBar> {
             message: toolbarItem.style.name,
             child: Padding(
               padding: _buttonPadding,
-              child: SizedBox(
-                  width: widget.iconSize,
-                  height: widget.iconSize,
-                  child: _getFontBackgroundColorWidget(i)),
+              child: SizedBox(width: widget.iconSize, height: widget.iconSize, child: _getFontBackgroundColorWidget(i)),
             )));
       } else if (toolbarItem.style == ToolBarStyle.addTable) {
         tempToolBarList.add(Tooltip(
@@ -635,10 +602,8 @@ class ToolBarState extends State<ToolBar> {
             message: toolbarItem.style.name,
             child: Padding(
               padding: _buttonPadding,
-              child: SizedBox(
-                  width: widget.iconSize,
-                  height: widget.iconSize,
-                  child: _getTablePickerWidget(i, context)),
+              child:
+                  SizedBox(width: widget.iconSize, height: widget.iconSize, child: _getTablePickerWidget(i, context)),
             )));
       } else if (toolbarItem.style == ToolBarStyle.editTable) {
         tempToolBarList.add(Tooltip(
@@ -713,24 +678,19 @@ class ToolBarState extends State<ToolBar> {
                       element = element.copyWith(isActive: false);
                     }
                   }
-                  toolbarItem =
-                      toolbarItem.copyWith(isActive: !toolbarItem.isActive);
+                  toolbarItem = toolbarItem.copyWith(isActive: !toolbarItem.isActive);
                 } else if (toolbarItem.style == ToolBarStyle.headerTwo) {
                   for (var element in _toolbarList) {
                     if (element.style == ToolBarStyle.headerOne) {
                       element = element.copyWith(isActive: false);
                     }
                   }
-                  toolbarItem =
-                      toolbarItem.copyWith(isActive: !toolbarItem.isActive);
+                  toolbarItem = toolbarItem.copyWith(isActive: !toolbarItem.isActive);
                 } else {
-                  toolbarItem =
-                      toolbarItem.copyWith(isActive: !toolbarItem.isActive);
+                  toolbarItem = toolbarItem.copyWith(isActive: !toolbarItem.isActive);
                 }
-                Map<String, dynamic> getFormat =
-                    _getFormatByStyle(toolbarItem.style, toolbarItem.isActive);
-                widget.controller.setFormat(
-                    format: getFormat['format'], value: getFormat['value']);
+                Map<String, dynamic> getFormat = _getFormatByStyle(toolbarItem.style, toolbarItem.isActive);
+                widget.controller.setFormat(format: getFormat['format'], value: getFormat['value']);
 
                 if (_formatMap['direction'] == 'rtl') {
                   widget.controller.setFormat(format: 'align', value: 'right');
@@ -835,8 +795,7 @@ class ToolBarState extends State<ToolBar> {
               ],
               onChanged: (value) {
                 _formatMap['size'] = value;
-                widget.controller.setFormat(
-                    format: 'size', value: value == 'normal' ? '' : value);
+                widget.controller.setFormat(format: 'size', value: value == 'normal' ? '' : value);
                 setState(() {});
               }),
         ),
@@ -844,17 +803,14 @@ class ToolBarState extends State<ToolBar> {
     );
   }
 
-  DropdownMenuItem _fontSizeItem(
-      {required String type, required double fontSize}) {
+  DropdownMenuItem _fontSizeItem({required String type, required double fontSize}) {
     return DropdownMenuItem(
         value: type.toLowerCase(),
         child: WebViewAware(
           child: Text(type,
               style: TextStyle(
                   fontSize: fontSize,
-                  color: _formatMap['size'] == type.toLowerCase()
-                      ? widget.activeIconColor
-                      : widget.iconColor!,
+                  color: _formatMap['size'] == type.toLowerCase() ? widget.activeIconColor : widget.iconColor!,
                   fontWeight: FontWeight.bold)),
         ));
   }
@@ -866,9 +822,7 @@ class ToolBarState extends State<ToolBar> {
       child: Text(type,
           style: TextStyle(
               fontSize: 14,
-              color: type.toLowerCase() != 'normal'
-                  ? widget.activeIconColor
-                  : widget.iconColor!,
+              color: type.toLowerCase() != 'normal' ? widget.activeIconColor : widget.iconColor!,
               fontWeight: FontWeight.bold)),
     );
   }
@@ -885,9 +839,7 @@ class ToolBarState extends State<ToolBar> {
             focusColor: Colors.transparent,
             alignment: Alignment.bottomCenter,
             isDense: true,
-            value: (_formatMap['align'] == '' || _formatMap['align'] == null)
-                ? 'left'
-                : _formatMap['align'],
+            value: (_formatMap['align'] == '' || _formatMap['align'] == null) ? 'left' : _formatMap['align'],
             items: [
               _getAlignDDItem('left'),
               _getAlignDDItem('center'),
@@ -896,8 +848,7 @@ class ToolBarState extends State<ToolBar> {
             ],
             onChanged: (value) {
               _formatMap['align'] = value == 'left' ? '' : value;
-              widget.controller
-                  .setFormat(format: 'align', value: _formatMap['align']);
+              widget.controller.setFormat(format: 'align', value: _formatMap['align']);
               setState(() {});
             }),
       ),
@@ -918,14 +869,88 @@ class ToolBarState extends State<ToolBar> {
       child: WebViewAware(
         child: Icon(
           icon,
-          color: _formatMap['align'] == type
-              ? widget.activeIconColor
-              : widget.iconColor,
+          color: _formatMap['align'] == type ? widget.activeIconColor : widget.iconColor,
           size: widget.iconSize,
         ),
       ),
     );
   }
+
+  final List<Color> fontColors = [
+    Color(0xFFFFFFFF), // #FFFFFF -> 서식취소로 변경
+    Color(0xFF555555), // #333333
+    Color(0xFF666666), // #666666
+    Color(0xFF888888), // #888888
+    Color(0xFF9D9D9D), // #9D9D9D
+    Color(0xFFDDDDDD), // #DDDDDD
+    Color(0xFFFFFFFF), // #FFFFFF
+    Color(0xFFEE2323), // #EE2323
+    Color(0xFFF89009), // #F89009
+    Color(0xFFF3C000), // #F3C000
+    Color(0xFF0DB4A0), // #0DB4A0
+    Color(0xFF006DD7), // #006DD7
+    Color(0xFF8A3DB6), // #8A3DB6
+    Color(0xFF72889C), // #72889C
+    Color(0xFFFFC1C8), // #ffc1c8
+    Color(0xFFFFC9AF), // #ffc9af
+    Color(0xFFF6E199), // #f6e199
+    Color(0xFF9FEEC3), // #9feec3
+    Color(0xFF99CEFA), // #99cefa
+    Color(0xFFC1BEF9), // #c1bef9
+    Color(0xFFC0D1E7), // #c0d1e7
+    Color(0xFFEF5369), // #ef5369
+    Color(0xFFEF6F53), // #ef6f53
+    Color(0xFFA6BC00), // #a6bc00
+    Color(0xFF409D00), // #409d00
+    Color(0xFF0493D3), // #0493d3
+    Color(0xFF6164C6), // #6164c6
+    Color(0xFF8CB3BE), // #8cb3be
+    Color(0xFF781B34), // #781b34
+    Color(0xFF953B35), // #953b35
+    Color(0xFF5F6D2C), // #5f6d2c
+    Color(0xFF1B711C), // #1b711c
+    Color(0xFF1A5490), // #1a5490
+    Color(0xFF5733B1), // #5733b1
+    Color(0xFF456771) // #456771
+  ];
+
+  final List<Color> bgColors = [
+    Color(0xFFFFFFFF), // #FFFFFF -> 서식취소로 변경
+    Color(0xFF000000), // #000000
+    Color(0xFF555555), // #555555
+    Color(0xFF666666), // #666666
+    Color(0xFF888888), // #888888
+    Color(0xFF9D9D9D), // #9D9D9D
+    Color(0xFFDDDDDD), // #DDDDDD
+    Color(0xFFEE2323), // #EE2323
+    Color(0xFFF89009), // #F89009
+    Color(0xFFF3C000), // #F3C000
+    Color(0xFF0DB4A0), // #0DB4A0
+    Color(0xFF006DD7), // #006DD7
+    Color(0xFF8A3DB6), // #8A3DB6
+    Color(0xFF72889C), // #72889C
+    Color(0xFFFFC1C8), // #ffc1c8
+    Color(0xFFFFC9AF), // #ffc9af
+    Color(0xFFF6E199), // #f6e199
+    Color(0xFF9FEEC3), // #9feec3
+    Color(0xFF99CEFA), // #99cefa
+    Color(0xFFC1BEF9), // #c1bef9
+    Color(0xFFC0D1E7), // #c0d1e7
+    Color(0xFFEF5369), // #ef5369
+    Color(0xFFEF6F53), // #ef6f53
+    Color(0xFFA6BC00), // #a6bc00
+    Color(0xFF409D00), // #409d00
+    Color(0xFF0493D3), // #0493d3
+    Color(0xFF6164C6), // #6164c6
+    Color(0xFF8CB3BE), // #8cb3be
+    Color(0xFF781B34), // #781b34
+    Color(0xFF953B35), // #953b35
+    Color(0xFF5F6D2C), // #5f6d2c
+    Color(0xFF1B711C), // #1b711c
+    Color(0xFF1A5490), // #1a5490
+    Color(0xFF5733B1), // #5733b1
+    Color(0xFF456771) // #456771
+  ];
 
   Widget _getFontColorWidget(int i) {
     return ElTooltip(
@@ -935,49 +960,99 @@ class ToolBarState extends State<ToolBar> {
         }
       },
       key: _fontColorKey,
-      content: ColorPicker(
-        onColorPicked: (color) {
-          _formatMap['color'] = color;
-          _toolbarList[i] = _toolbarList[i].copyWith(isActive: true);
-          widget.controller
-              .setFormat(format: 'color', value: _formatMap['color']);
-          setState(() {});
-          if (_fontColorKey.currentState != null) {
-            _fontColorKey.currentState!.hideOverlay();
-          }
-        },
+      content: SizedBox(
+        width: 200,
+        height: 143,
+        child: Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: GridView.builder(
+            shrinkWrap: true,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 7, // 한 줄에 표시할 색상 수
+              crossAxisSpacing: 4.0,
+              mainAxisSpacing: 4.0,
+            ),
+            itemCount: fontColors.length,
+            itemBuilder: (context, index) {
+              if (index == 0) {
+                return GestureDetector(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: (fontColors[index] == Colors.white) ? Colors.black : fontColors[index], // Border color
+                          width: 0.001 // Border width
+                          ),
+                      shape: BoxShape.circle,
+                      color: fontColors[index],
+                    ),
+                    clipBehavior: Clip.hardEdge,
+                    child: const Icon(Icons.dnd_forwardslash_sharp, color: Colors.black),
+                  ),
+                  onTap: () {
+                    _formatMap['color'] = null;
+                    _toolbarList[i] = _toolbarList[i].copyWith(isActive: true);
+                    widget.controller.setFormat(format: 'color', value: _formatMap['color']);
+                    setState(() {});
+                    if (_fontColorKey.currentState != null) {
+                      _fontColorKey.currentState!.hideOverlay();
+                    }
+                  },
+                );
+              } else {
+                return GestureDetector(
+                  onTap: () {
+                    late Color newColor = fontColors[index];
+
+                    _formatMap['color'] = newColor.toHex();
+                    _toolbarList[i] = _toolbarList[i].copyWith(isActive: true);
+                    widget.controller.setFormat(format: 'color', value: _formatMap['color']);
+                    setState(() {});
+                    if (_fontColorKey.currentState != null) {
+                      _fontColorKey.currentState!.hideOverlay();
+                    }
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: (fontColors[index] == Colors.white) ? Colors.black : fontColors[index], // Border color
+                          width: 0.5 // Border width
+                          ),
+                      shape: BoxShape.circle,
+                      color: fontColors[index],
+                    ),
+                    child:
+                        (_formatMap['color'] != null && _formatMap['color'] == fontColors[index].toHex().toLowerCase())
+                            ? (Icon(
+                                Icons.check,
+                                size: 10,
+                                color: (fontColors[index] == Colors.white) ? Colors.black : Colors.white,
+                              ))
+                            : (null),
+                  ),
+                );
+              }
+            },
+          ),
+        ),
       ),
+      // content: ColorPicker(
+      //   onColorPicked: (color) {
+      //     _formatMap['color'] = color;
+      //     _toolbarList[i] = _toolbarList[i].copyWith(isActive: true);
+      //     widget.controller.setFormat(format: 'color', value: _formatMap['color']);
+      //     setState(() {});
+      //     if (_fontColorKey.currentState != null) {
+      //       _fontColorKey.currentState!.hideOverlay();
+      //     }
+      //   },
+      // ),
       child: Material(
         color: Colors.transparent,
         child: SizedBox(
           width: widget.iconSize,
           height: widget.iconSize,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Text(
-                  'A',
-                  maxLines: 1,
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: _formatMap['color'] != null
-                          ? widget.activeIconColor
-                          : widget.iconColor,
-                      fontSize: widget.iconSize! - 5),
-                ),
-              ),
-              Container(
-                color: _formatMap['color'] != null
-                    ? HexColor.fromHex(_formatMap['color'])
-                    : Colors.black,
-                height: 3,
-                width: widget.iconSize! - 3,
-              ),
-            ],
-          ),
+          child: Icon(Icons.format_color_text_rounded,
+              color: _formatMap['color'] != null ? HexColor.fromHex(_formatMap['color']) : Colors.black),
         ),
       ),
     );
@@ -991,43 +1066,102 @@ class ToolBarState extends State<ToolBar> {
         }
       },
       key: _fontBgColorKey,
-      content: ColorPicker(
-        onColorPicked: (color) {
-          _formatMap['background'] = color;
-          _toolbarList[i] = _toolbarList[i].copyWith(isActive: true);
+      content: SizedBox(
+        width: 200,
+        height: 143,
+        child: Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: GridView.builder(
+            shrinkWrap: true,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 7, // 한 줄에 표시할 색상 수
+              crossAxisSpacing: 4.0,
+              mainAxisSpacing: 4.0,
+            ),
+            itemCount: bgColors.length,
+            itemBuilder: (context, index) {
+              if (index == 0) {
+                return GestureDetector(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: (bgColors[index] == Colors.white) ? Colors.black : bgColors[index], // Border color
+                          width: 0.001 // Border width
+                          ),
+                      shape: BoxShape.circle,
+                      color: bgColors[index],
+                    ),
+                    clipBehavior: Clip.hardEdge,
+                    child: const Icon(Icons.dnd_forwardslash_sharp, color: Colors.black),
+                  ),
+                  onTap: () {
+                    _formatMap['background'] = null;
+                    _toolbarList[i] = _toolbarList[i].copyWith(isActive: true);
+                    widget.controller.setFormat(format: 'background', value: _formatMap['background']);
+                    setState(() {});
+                    if (_fontColorKey.currentState != null) {
+                      _fontColorKey.currentState!.hideOverlay();
+                    }
+                  },
+                );
+              } else {
+                return GestureDetector(
+                  onTap: () {
+                    late Color newColor = bgColors[index];
 
-          widget.controller
-              .setFormat(format: 'background', value: _formatMap['background']);
-          setState(() {});
-          if (_fontBgColorKey.currentState != null) {
-            _fontBgColorKey.currentState!.hideOverlay();
-          }
-        },
+                    _formatMap['background'] = newColor.toHex();
+                    _toolbarList[i] = _toolbarList[i].copyWith(isActive: true);
+                    widget.controller.setFormat(format: 'background', value: _formatMap['background']);
+                    setState(() {});
+                    if (_fontColorKey.currentState != null) {
+                      _fontColorKey.currentState!.hideOverlay();
+                    }
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: (bgColors[index] == Colors.white) ? Colors.black : bgColors[index], // Border color
+                          width: 0.5 // Border width
+                          ),
+                      shape: BoxShape.circle,
+                      color: bgColors[index],
+                    ),
+                    child: (_formatMap['background'] != null &&
+                            _formatMap['background'] == bgColors[index].toHex().toLowerCase())
+                        ? (Icon(
+                            Icons.check,
+                            size: 10,
+                            color: (bgColors[index] == Colors.white) ? Colors.black : Colors.white,
+                          ))
+                        : (null),
+                  ),
+                );
+              }
+            },
+          ),
+        ),
       ),
+      // ColorPicker(
+      //   onColorPicked: (color) {
+      //     _formatMap['background'] = color;
+      //     _toolbarList[i] = _toolbarList[i].copyWith(isActive: true);
+      //
+      //     widget.controller.setFormat(format: 'background', value: _formatMap['background']);
+      //     setState(() {});
+      //     if (_fontBgColorKey.currentState != null) {
+      //       _fontBgColorKey.currentState!.hideOverlay();
+      //     }
+      //   },
+      // ),
       child: Material(
         color: Colors.transparent,
         child: Container(
           alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border.all(width: 0.1),
-            color: _formatMap['background'] != null
-                ? HexColor.fromHex(_formatMap['background'])
-                : Colors.transparent,
-          ),
           height: widget.iconSize,
           width: widget.iconSize,
-          child: FittedBox(
-            fit: BoxFit.fitHeight,
-            child: Text(
-              'A',
-              maxLines: 1,
-              style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: _formatMap['background'] != null
-                      ? widget.activeIconColor
-                      : widget.iconColor,
-                  fontSize: widget.iconSize! - 1),
-            ),
+          child: Icon(
+            Icons.format_color_fill_rounded,
+            color: _formatMap['background'] != null ? HexColor.fromHex(_formatMap['background']) : Colors.black,
           ),
         ),
       ),
@@ -1075,8 +1209,7 @@ class ToolBarState extends State<ToolBar> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             contentPadding: EdgeInsets.zero,
             content: WebViewAware(
               child: Builder(
@@ -1097,12 +1230,9 @@ class ToolBarState extends State<ToolBar> {
                             const Expanded(
                                 child: Text(
                               'Select Rows x Columns',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w600),
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                             )),
-                            IconButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                icon: const Icon(Icons.close))
+                            IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.close))
                           ],
                         ),
                         Expanded(

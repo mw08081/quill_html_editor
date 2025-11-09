@@ -37,13 +37,9 @@ class _MyAppState extends State<MyApp> {
   final _toolbarColor = Colors.grey.shade200;
   final _backgroundColor = Colors.white70;
   final _toolbarIconColor = Colors.black87;
-  final _editorTextStyle = const TextStyle(
-      fontSize: 18,
-      color: Colors.black,
-      fontWeight: FontWeight.normal,
-      fontFamily: 'Roboto');
-  final _hintTextStyle = const TextStyle(
-      fontSize: 18, color: Colors.black38, fontWeight: FontWeight.normal);
+  final _editorTextStyle =
+      const TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.normal, fontFamily: 'Roboto');
+  final _hintTextStyle = const TextStyle(fontSize: 18, color: Colors.black38, fontWeight: FontWeight.normal);
 
   bool _hasFocus = false;
 
@@ -75,6 +71,20 @@ class _MyAppState extends State<MyApp> {
         body: Column(
           children: [
             ToolBar(
+              toolBarConfig: const [
+                ToolBarStyle.size,
+                ToolBarStyle.separator,
+                ToolBarStyle.bold,
+                ToolBarStyle.italic,
+                ToolBarStyle.underline,
+                ToolBarStyle.strike,
+                ToolBarStyle.separator,
+                ToolBarStyle.color,
+                ToolBarStyle.background,
+                ToolBarStyle.separator,
+                ToolBarStyle.align,
+                ToolBarStyle.separator
+              ],
               toolBarColor: _toolbarColor,
               padding: const EdgeInsets.all(8),
               iconSize: 25,
@@ -84,31 +94,34 @@ class _MyAppState extends State<MyApp> {
               crossAxisAlignment: WrapCrossAlignment.start,
               direction: Axis.horizontal,
               customButtons: [
-                Container(
-                  width: 25,
-                  height: 25,
-                  decoration: BoxDecoration(
-                      color: _hasFocus ? Colors.green : Colors.grey,
-                      borderRadius: BorderRadius.circular(15)),
-                ),
-                InkWell(
-                    onTap: () => unFocusEditor(),
-                    child: const Icon(
-                      Icons.favorite,
-                      color: Colors.black,
-                    )),
-                InkWell(
-                    onTap: () async {
-                      var selectedText = await controller.getSelectedText();
-                      debugPrint('selectedText $selectedText');
-                      var selectedHtmlText =
-                          await controller.getSelectedHtmlText();
-                      debugPrint('selectedHtmlText $selectedHtmlText');
-                    },
-                    child: const Icon(
-                      Icons.add_circle,
-                      color: Colors.black,
-                    )),
+                InkWell(onTap: () {}, child: const Icon(Icons.image, color: Colors.black)),
+                InkWell(onTap: () {}, child: const Icon(Icons.play_circle_fill_rounded, color: Colors.black)),
+                InkWell(onTap: () {}, child: const Icon(Icons.file_present_rounded, color: Colors.black)),
+                // Container(
+                //   width: 25,
+                //   height: 25,
+                //   decoration: BoxDecoration(
+                //       color: _hasFocus ? Colors.green : Colors.grey,
+                //       borderRadius: BorderRadius.circular(15)),
+                // ),
+                // InkWell(
+                //     onTap: () => unFocusEditor(),
+                //     child: const Icon(
+                //       Icons.favorite,
+                //       color: Colors.black,
+                //     )),
+                // InkWell(
+                //     onTap: () async {
+                //       var selectedText = await controller.getSelectedText();
+                //       debugPrint('selectedText $selectedText');
+                //       var selectedHtmlText =
+                //           await controller.getSelectedHtmlText();
+                //       debugPrint('selectedHtmlText $selectedHtmlText');
+                //     },
+                //     child: const Icon(
+                //       Icons.add_circle,
+                //       color: Colors.black,
+                //     )),
               ],
             ),
             Expanded(
@@ -135,21 +148,19 @@ class _MyAppState extends State<MyApp> {
                     color: Colors.red,
                   ));
                 },
-                onFocusChanged: (focus) {
-                  debugPrint('has focus $focus');
-                  setState(() {
-                    _hasFocus = focus;
-                  });
-                },
-                onTextChanged: (text) => debugPrint('widget text change $text'),
+                // onFocusChanged: (focus) {
+                //   debugPrint('has focus $focus');
+                //   setState(() {
+                //     _hasFocus = focus;
+                //   });
+                // },
+                // onTextChanged: (text) => debugPrint('widget text change $text'),
                 onEditorCreated: () {
                   debugPrint('Editor has been loaded');
                   setHtmlText('Testing text on load');
                 },
-                onEditorResized: (height) =>
-                    debugPrint('Editor resized $height'),
-                onSelectionChanged: (sel) =>
-                    debugPrint('index ${sel.index}, range ${sel.length}'),
+                onEditorResized: (height) => debugPrint('Editor resized $height'),
+                // onSelectionChanged: (sel) => debugPrint('index ${sel.index}, range ${sel.length}'),
               ),
             ),
           ],
@@ -174,11 +185,9 @@ class _MyAppState extends State<MyApp> {
                   text: 'Insert Video',
                   onPressed: () {
                     ////insert
-                    insertVideoURL(
-                        'https://www.youtube.com/watch?v=4AoFA19gbLo');
+                    insertVideoURL('https://www.youtube.com/watch?v=4AoFA19gbLo');
                     insertVideoURL('https://vimeo.com/440421754');
-                    insertVideoURL(
-                        'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4');
+                    insertVideoURL('http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4');
                   }),
               textButton(
                   text: 'Insert Image',
@@ -188,8 +197,7 @@ class _MyAppState extends State<MyApp> {
               textButton(
                   text: 'Insert Index',
                   onPressed: () {
-                    insertHtmlText("This text is set by the insertText method",
-                        index: 10);
+                    insertHtmlText("This text is set by the insertText method", index: 10);
                   }),
               textButton(
                   text: 'Undo',
@@ -225,14 +233,11 @@ class _MyAppState extends State<MyApp> {
                       "ops": [
                         {
                           "insert": {
-                            "video":
-                                "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                            "video": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
                           }
                         },
                         {
-                          "insert": {
-                            "video": "https://www.youtube.com/embed/4AoFA19gbLo"
-                          }
+                          "insert": {"video": "https://www.youtube.com/embed/4AoFA19gbLo"}
                         },
                         {"insert": "Hello"},
                         {
