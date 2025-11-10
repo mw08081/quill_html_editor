@@ -719,7 +719,10 @@ class ToolBarState extends State<ToolBar> {
                 ),
               )));
         }
+
+        /// 특수함수 호출 (이 위쪽)
       } else {
+        /// 일반함수 호출(이 아래쪽)
         tempToolBarList.add(Tooltip(
             waitDuration: const Duration(milliseconds: 800),
             message: toolbarItem.style.name,
@@ -816,6 +819,12 @@ class ToolBarState extends State<ToolBar> {
         return {'format': 'color', 'value': 'red'};
       case ToolBarStyle.align:
         return {'format': 'align', 'value': 'right'};
+      case ToolBarStyle.alignLeft:
+        return {'format': 'alignLeft', 'value': isActive};
+      case ToolBarStyle.alignCenter:
+        return {'format': 'alignCenter', 'value': isActive};
+      case ToolBarStyle.alignRight:
+        return {'format': 'alignRight', 'value': isActive};
       case ToolBarStyle.listOrdered:
         return {'format': 'list', 'value': isActive ? 'ordered' : ''};
       case ToolBarStyle.listBullet:
@@ -834,6 +843,8 @@ class ToolBarState extends State<ToolBar> {
         return {'format': 'background', 'value': 'red'};
       case ToolBarStyle.link:
         return {'format': 'link', 'value': ''};
+      case ToolBarStyle.attachment:
+        return {'format': 'attachment', 'value': ''};
       case ToolBarStyle.undo:
       case ToolBarStyle.redo:
       case ToolBarStyle.clearHistory:
@@ -1358,8 +1369,17 @@ class ToolBarItem extends StatelessWidget {
         return _getIconWidget(Icons.redo_sharp);
       case ToolBarStyle.clearHistory:
         return _getIconWidget(Icons.layers_clear_sharp);
-      case ToolBarStyle.link:
+      case ToolBarStyle.alignLeft:
+        return _getIconWidget(Icons.format_align_left_rounded);
+      case ToolBarStyle.alignCenter:
+        return _getIconWidget(Icons.format_align_center_rounded);
+      case ToolBarStyle.alignRight:
+        return _getIconWidget(Icons.format_align_right_rounded);
+      case ToolBarStyle.attachment:
+        return _getIconWidget(Icons.file_present_rounded);
       case ToolBarStyle.video:
+        return _getIconWidget(Icons.play_circle_fill_rounded);
+      case ToolBarStyle.link:
       case ToolBarStyle.size:
       case ToolBarStyle.addTable:
       case ToolBarStyle.editTable:
@@ -1401,19 +1421,19 @@ class ToolBarItem extends StatelessWidget {
 
 enum ToolBarStyle {
   ///[bold] sets bold format
-  bold("Bold"),
+  bold("굵게"),
 
   /// [italic] sets italic format
 
-  italic("Italic"),
+  italic("기울림"),
 
   /// [underline] sets underline to text
 
-  underline("Underline"),
+  underline("밑줄"),
 
   /// [strike] makes the selected text strikethrough
 
-  strike("Strikethrough"),
+  strike("취소선"),
 
   /// [blockQuote] converts text to quote
 
@@ -1449,11 +1469,11 @@ enum ToolBarStyle {
 
   /// [color] sets font color
 
-  color("Font color"),
+  color("글자색"),
 
   /// [background] sets background color to text
 
-  background("Background color"),
+  background("배경색"),
 
   /// [align] adds alignment to text, left, right, center, justify
 
@@ -1469,7 +1489,7 @@ enum ToolBarStyle {
 
   /// [size] sets fontSize of the text
 
-  size("Font Size"),
+  size("글자 크기"),
 
   /// [link] sets hyperlink to selected text
 
@@ -1477,11 +1497,11 @@ enum ToolBarStyle {
 
   /// [image] embeds image to the editor
 
-  image("Insert image"),
+  image("이미지 첨부"),
 
   /// [video] embeds Youtube, Vimeo or other network videos to editor
 
-  video("Insert Youtube/Url"),
+  video("동영상 첨부"),
 
   /// [clean] clears all formats of editor, (for internal use case)
   clean("Clears all formats"),
@@ -1502,9 +1522,21 @@ enum ToolBarStyle {
   editTable("Edit table"),
 
   ///[separator] to add divider between toolbar items
-  separator("separator");
+  separator(""),
 
   ///font - later releases
+
+  /// [attachment] to add attatchment file on server
+  attachment("첨부파일"),
+
+  /// [alignRight] separated from dropdown for alignLeft
+  alignLeft("좌측 정렬"),
+
+  /// [alignCenter] separated from dropdown for alignCenter
+  alignCenter("가운데 정렬"),
+
+  /// [alignLeft] separated from dropdown for alignRight
+  alignRight("우측 정렬");
 
   /// Represents the style of a toolbar in the editor.
   const ToolBarStyle(this.name);

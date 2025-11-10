@@ -82,7 +82,10 @@ class _MyAppState extends State<MyApp> {
                 ToolBarStyle.color,
                 ToolBarStyle.background,
                 ToolBarStyle.separator,
-                ToolBarStyle.align,
+                // ToolBarStyle.align,
+                ToolBarStyle.alignLeft,
+                ToolBarStyle.alignCenter,
+                ToolBarStyle.alignRight,
                 ToolBarStyle.separator
               ],
               toolBarColor: _toolbarColor,
@@ -94,9 +97,27 @@ class _MyAppState extends State<MyApp> {
               crossAxisAlignment: WrapCrossAlignment.start,
               direction: Axis.horizontal,
               customButtons: [
-                InkWell(onTap: () {}, child: const Icon(Icons.image, color: Colors.black)),
-                InkWell(onTap: () {}, child: const Icon(Icons.play_circle_fill_rounded, color: Colors.black)),
-                InkWell(onTap: () {}, child: const Icon(Icons.file_present_rounded, color: Colors.black)),
+                Tooltip(
+                    waitDuration: const Duration(milliseconds: 800),
+                    message: '이미지 첨부',
+                    child: InkWell(
+                      onTap: () {},
+                      child: const SizedBox(child: Icon(Icons.image, color: Colors.black)),
+                    )),
+                Tooltip(
+                    waitDuration: const Duration(milliseconds: 800),
+                    message: '동영상 첨부',
+                    child: InkWell(
+                      onTap: () {},
+                      child: const SizedBox(child: Icon(Icons.play_circle_fill_rounded, color: Colors.black)),
+                    )),
+                Tooltip(
+                    waitDuration: const Duration(milliseconds: 800),
+                    message: '파일 첨부',
+                    child: InkWell(
+                      onTap: () {},
+                      child: const SizedBox(child: Icon(Icons.file_present_rounded, color: Colors.black)),
+                    )),
                 // Container(
                 //   width: 25,
                 //   height: 25,
