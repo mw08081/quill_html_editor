@@ -545,6 +545,15 @@ class ToolBarState extends State<ToolBar> {
             }
           }
           break;
+        case ToolBarStyle.alignLeft:
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['align'] == '');
+          break;
+        case ToolBarStyle.alignCenter:
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['align'] == 'center');
+          break;
+        case ToolBarStyle.alignRight:
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['align'] == 'right');
+          break;
         case ToolBarStyle.align:
           formatMap['align'] ??= '';
           _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['align'] != null);
@@ -769,10 +778,14 @@ class ToolBarState extends State<ToolBar> {
                     }
                   }
                   toolbarItem = toolbarItem.copyWith(isActive: !toolbarItem.isActive);
+                  // } else if (toolbarItem.style == ToolBarStyle.alignLeft) {
+                  // } else if (toolbarItem.style == ToolBarStyle.alignCenter) {
+                  // } else if (toolbarItem.style == ToolBarStyle.alignRight) {
                 } else {
                   toolbarItem = toolbarItem.copyWith(isActive: !toolbarItem.isActive);
                 }
                 Map<String, dynamic> getFormat = _getFormatByStyle(toolbarItem.style, toolbarItem.isActive);
+
                 widget.controller.setFormat(format: getFormat['format'], value: getFormat['value']);
 
                 if (_formatMap['direction'] == 'rtl') {
@@ -823,11 +836,11 @@ class ToolBarState extends State<ToolBar> {
       case ToolBarStyle.align:
         return {'format': 'align', 'value': 'right'};
       case ToolBarStyle.alignLeft:
-        return {'format': 'alignLeft', 'value': isActive};
+        return {'format': 'align', 'value': ''};
       case ToolBarStyle.alignCenter:
-        return {'format': 'alignCenter', 'value': isActive};
+        return {'format': 'align', 'value': 'center'};
       case ToolBarStyle.alignRight:
-        return {'format': 'alignRight', 'value': isActive};
+        return {'format': 'align', 'value': 'right'};
       case ToolBarStyle.listOrdered:
         return {'format': 'list', 'value': isActive ? 'ordered' : ''};
       case ToolBarStyle.listBullet:
@@ -846,8 +859,6 @@ class ToolBarState extends State<ToolBar> {
         return {'format': 'background', 'value': 'red'};
       case ToolBarStyle.link:
         return {'format': 'link', 'value': ''};
-      case ToolBarStyle.attachment:
-        return {'format': 'attachment', 'value': ''};
       case ToolBarStyle.undo:
       case ToolBarStyle.redo:
       case ToolBarStyle.clearHistory:
@@ -1144,8 +1155,8 @@ class ToolBarState extends State<ToolBar> {
                     _toolbarList[i] = _toolbarList[i].copyWith(isActive: true);
                     widget.controller.setFormat(format: 'background', value: _formatMap['background']);
                     setState(() {});
-                    if (_fontColorKey.currentState != null) {
-                      _fontColorKey.currentState!.hideOverlay();
+                    if (_fontBgColorKey.currentState != null) {
+                      _fontBgColorKey.currentState!.hideOverlay();
                     }
                   },
                 );
@@ -1158,8 +1169,8 @@ class ToolBarState extends State<ToolBar> {
                     _toolbarList[i] = _toolbarList[i].copyWith(isActive: true);
                     widget.controller.setFormat(format: 'background', value: _formatMap['background']);
                     setState(() {});
-                    if (_fontColorKey.currentState != null) {
-                      _fontColorKey.currentState!.hideOverlay();
+                    if (_fontBgColorKey.currentState != null) {
+                      _fontBgColorKey.currentState!.hideOverlay();
                     }
                   },
                   child: Container(
@@ -1408,8 +1419,6 @@ class ToolBarItem extends StatelessWidget {
         return _getIconWidget(Icons.format_align_center_rounded);
       case ToolBarStyle.alignRight:
         return _getIconWidget(Icons.format_align_right_rounded);
-      case ToolBarStyle.attachment:
-        return _getIconWidget(Icons.file_present_rounded);
       case ToolBarStyle.video:
         return _getIconWidget(Icons.play_circle_fill_rounded);
       case ToolBarStyle.link:
@@ -1458,7 +1467,7 @@ enum ToolBarStyle {
 
   /// [italic] sets italic format
 
-  italic("기울림"),
+  italic("기울림꼴"),
 
   /// [underline] sets underline to text
 
@@ -1558,9 +1567,6 @@ enum ToolBarStyle {
   separator(""),
 
   ///font - later releases
-
-  /// [attachment] to add attatchment file on server
-  attachment("첨부파일"),
 
   /// [alignRight] separated from dropdown for alignLeft
   alignLeft("좌측 정렬"),

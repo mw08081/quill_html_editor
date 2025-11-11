@@ -47,7 +47,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     controller = QuillEditorController();
     controller.onTextChanged((text) {
-      debugPrint('listening to $text');
+      // debugPrint('listening to $text');
     });
     controller.onEditorLoaded(() {
       debugPrint('Editor Loaded :)');
@@ -84,7 +84,6 @@ class _MyAppState extends State<MyApp> {
                   ToolBarStyle.color,
                   ToolBarStyle.background,
                   ToolBarStyle.separator,
-                  // ToolBarStyle.align,
                   ToolBarStyle.alignLeft,
                   ToolBarStyle.alignCenter,
                   ToolBarStyle.alignRight,
