@@ -79,8 +79,8 @@ class ElTooltip extends StatefulWidget {
 /// ElTooltipState extends ElTooltip class
 class ElTooltipState extends State<ElTooltip> with WidgetsBindingObserver {
   ///
-  /// 현재 개발중인 앱에서 최상단 탭바의 높이만큼 y를 내려줘야지 해당위치에 원하도록 버블이 형성됨
-  final double ijitApp_TabHeight = 60.0;
+  /// 현재 개발중인 앱에서 최상단 탭바의 높이만큼 y를 올려줘야지 해당위치에 원하도록 버블이 형성됨
+  final double ijitApp_TabHeight = -60.0;
 
   final ElementBox _arrowBox = const ElementBox(h: 10.0, w: 16.0);
   ElementBox _overlayBox = const ElementBox(h: 0.0, w: 0.0);
