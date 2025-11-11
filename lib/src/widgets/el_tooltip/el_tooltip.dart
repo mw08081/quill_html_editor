@@ -78,6 +78,10 @@ class ElTooltip extends StatefulWidget {
 
 /// ElTooltipState extends ElTooltip class
 class ElTooltipState extends State<ElTooltip> with WidgetsBindingObserver {
+  ///
+  /// 현재 개발중인 앱에서 최상단 탭바의 높이만큼 y를 내려줘야지 해당위치에 원하도록 버블이 형성됨
+  final double ijitApp_TabHeight = 60.0;
+
   final ElementBox _arrowBox = const ElementBox(h: 10.0, w: 16.0);
   ElementBox _overlayBox = const ElementBox(h: 0.0, w: 0.0);
   OverlayEntry? _overlayEntry;
@@ -105,8 +109,7 @@ class ElTooltipState extends State<ElTooltip> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     _widgetKey = GlobalKey(debugLabel: widget.key.toString());
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _loadHiddenOverlay(context));
+    WidgetsBinding.instance.addPostFrameCallback((_) => _loadHiddenOverlay(context));
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -133,8 +136,7 @@ class ElTooltipState extends State<ElTooltip> with WidgetsBindingObserver {
     _overlayStateHidden = Overlay.of(context);
     _overlayEntryHidden = OverlayEntry(
       builder: (context) {
-        WidgetsBinding.instance
-            .addPostFrameCallback((_) => _getHiddenOverlaySize(context));
+        WidgetsBinding.instance.addPostFrameCallback((_) => _getHiddenOverlaySize(context));
         return Opacity(
           opacity: 0,
           child: Center(
@@ -208,7 +210,7 @@ class ElTooltipState extends State<ElTooltip> with WidgetsBindingObserver {
               ),
             ),
             Positioned(
-              top: toolTipElementsDisplay.bubble.y,
+              top: toolTipElementsDisplay.bubble.y + ijitApp_TabHeight,
               left: toolTipElementsDisplay.bubble.x,
               child: Bubble(
                 triggerBox: _triggerBox,
@@ -219,7 +221,7 @@ class ElTooltipState extends State<ElTooltip> with WidgetsBindingObserver {
               ),
             ),
             Positioned(
-              top: toolTipElementsDisplay.arrow.y,
+              top: toolTipElementsDisplay.arrow.y + ijitApp_TabHeight,
               left: toolTipElementsDisplay.arrow.x,
               child: Arrow(
                 color: widget.color,
@@ -229,13 +231,11 @@ class ElTooltipState extends State<ElTooltip> with WidgetsBindingObserver {
               ),
             ),
             Positioned(
-              top: _triggerBox.y,
+              top: _triggerBox.y + ijitApp_TabHeight,
               left: _triggerBox.x,
               child: GestureDetector(
                 onTap: () {
-                  /* _overlayEntry != null
-                      ? hideOverlay()
-                      : _showOverlay(context);*/
+                  _overlayEntry != null ? hideOverlay() : _showOverlay(context);
                 },
                 child: widget.child,
               ),
@@ -251,8 +251,7 @@ class ElTooltipState extends State<ElTooltip> with WidgetsBindingObserver {
 
     // Add timeout for the tooltip to disappear after a few seconds
     if (widget.timeout > 0) {
-      await Future.delayed(Duration(seconds: widget.timeout))
-          .whenComplete(() => hideOverlay());
+      await Future.delayed(Duration(seconds: widget.timeout)).whenComplete(() => hideOverlay());
     }
   }
 
@@ -277,8 +276,7 @@ class ElTooltipState extends State<ElTooltip> with WidgetsBindingObserver {
     if (widget.enable) {
       _overlayEntry != null ? hideOverlay() : _showOverlay(context);
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(widget.error)));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(widget.error)));
     }
   }
 }

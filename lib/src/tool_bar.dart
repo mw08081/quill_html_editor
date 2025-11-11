@@ -395,6 +395,7 @@ class ToolBarState extends State<ToolBar> {
 
   List<ToolBarItem> _toolbarList = [];
   Map<String, dynamic> _formatMap = {};
+  late GlobalKey<ElTooltipState> _fontSizeKey;
   late GlobalKey<ElTooltipState> _fontBgColorKey;
   late GlobalKey<ElTooltipState> _fontColorKey;
   late GlobalKey<ElTooltipState> _tablePickerKey;
@@ -402,6 +403,7 @@ class ToolBarState extends State<ToolBar> {
 
   @override
   void initState() {
+    _fontSizeKey = GlobalKey<ElTooltipState>(debugLabel: 'fontSizeKey${widget.controller.hashCode.toString()}');
     _fontBgColorKey = GlobalKey<ElTooltipState>(debugLabel: 'fontBgColorKey${widget.controller.hashCode.toString()}');
     _fontColorKey = GlobalKey<ElTooltipState>(debugLabel: 'fontColorKey${widget.controller.hashCode.toString()}');
     _tablePickerKey = GlobalKey<ElTooltipState>(debugLabel: '_tablePickerKey${widget.controller.hashCode.toString()}');
@@ -604,7 +606,8 @@ class ToolBarState extends State<ToolBar> {
             message: toolbarItem.style.name,
             child: Padding(
               padding: _buttonPadding,
-              child: _fontSizeDD(),
+              // child: _fontSizeDD(),
+              child: _fontSizeElTooltip(),
             )));
       } else if (toolbarItem.style == ToolBarStyle.align) {
         tempToolBarList.add(Tooltip(
@@ -855,6 +858,37 @@ class ToolBarState extends State<ToolBar> {
     }
   }
 
+  Widget _fontSizeElTooltip() {
+    return ElTooltip(
+      onTap: () {
+        if (_fontSizeKey.currentState != null) {
+          _fontSizeKey.currentState!.showOverlayOnTap();
+        }
+      },
+      key: _fontSizeKey,
+      content: SizedBox(
+        width: 200,
+        height: 143,
+        child: Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: GridView.builder(
+            shrinkWrap: true,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 1,
+              mainAxisSpacing: 4.0,
+            ),
+            itemCount: fontColors.length,
+            itemBuilder: (context, index) {},
+          ),
+        ),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: _fontSelectionTextItem(type: 'Small'),
+      ),
+    );
+  }
+
   Widget _fontSizeDD() {
     return FittedBox(
       child: DropdownButtonHideUnderline(
@@ -907,11 +941,10 @@ class ToolBarState extends State<ToolBar> {
     required String type,
   }) {
     return SizedBox(
-      child: Text(type,
-          style: TextStyle(
-              fontSize: 14,
-              color: type.toLowerCase() != 'normal' ? widget.activeIconColor : widget.iconColor!,
-              fontWeight: FontWeight.bold)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Text(type, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+      ),
     );
   }
 
