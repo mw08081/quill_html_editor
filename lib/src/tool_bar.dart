@@ -546,7 +546,7 @@ class ToolBarState extends State<ToolBar> {
           }
           break;
         case ToolBarStyle.alignLeft:
-          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['align'] == '');
+          _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['align'] == '' || formatMap['align'] == null);
           break;
         case ToolBarStyle.alignCenter:
           _toolbarList[i] = _toolbarList[i].copyWith(isActive: formatMap['align'] == 'center');
@@ -616,7 +616,7 @@ class ToolBarState extends State<ToolBar> {
             child: Padding(
               padding: _buttonPadding,
               // child: _fontSizeDD(),
-              child: _fontSizeElTooltip(),
+              child: _getFontSizeWidget(),
             )));
       } else if (toolbarItem.style == ToolBarStyle.align) {
         tempToolBarList.add(Tooltip(
@@ -869,7 +869,11 @@ class ToolBarState extends State<ToolBar> {
     }
   }
 
-  Widget _fontSizeElTooltip() {
+  Widget _getFontSizeWidget() {
+    final List<double> fontSizeList = [10, 14, 20, 36];
+    final List<String> fontSizeValue = ['small', 'normal', 'large', 'huge'];
+    final fontSizeListIndex = fontSizeValue.indexOf(_formatMap['size'] ?? 'normal');
+
     return ElTooltip(
       onTap: () {
         if (_fontSizeKey.currentState != null) {
@@ -878,24 +882,33 @@ class ToolBarState extends State<ToolBar> {
       },
       key: _fontSizeKey,
       content: SizedBox(
-        width: 200,
-        height: 143,
-        child: Padding(
-          padding: const EdgeInsets.all(2.0),
-          child: GridView.builder(
-            shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 1,
-              mainAxisSpacing: 4.0,
-            ),
-            itemCount: fontColors.length,
-            itemBuilder: (context, index) {},
-          ),
+        width: 190,
+        height: 220,
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: fontSizeList.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text('가나다', style: TextStyle(fontSize: fontSizeList[index], color: Colors.black)),
+              trailing: Text('${fontSizeList[index]}pt', style: const TextStyle(fontSize: 13, color: Colors.black)),
+              onTap: () {
+                print(index);
+                var value = fontSizeValue[index];
+
+                _formatMap['size'] = value;
+                widget.controller.setFormat(format: 'size', value: value == 'normal' ? '' : value);
+                setState(() {});
+                if (_fontSizeKey.currentState != null) {
+                  _fontSizeKey.currentState!.hideOverlay();
+                }
+              },
+            );
+          },
         ),
       ),
       child: Material(
         color: Colors.transparent,
-        child: _fontSelectionTextItem(type: 'Small'),
+        child: _fontSelectionTextItem(type: '${fontSizeList[fontSizeListIndex]}pt'),
       ),
     );
   }
@@ -928,6 +941,7 @@ class ToolBarState extends State<ToolBar> {
               ],
               onChanged: (value) {
                 _formatMap['size'] = value;
+                print(value);
                 widget.controller.setFormat(format: 'size', value: value == 'normal' ? '' : value);
                 setState(() {});
               }),
@@ -952,9 +966,16 @@ class ToolBarState extends State<ToolBar> {
     required String type,
   }) {
     return SizedBox(
+      width: 80,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Text(type, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+        padding: const EdgeInsets.fromLTRB(10, 2.5, 0, 0),
+        child: Row(
+          children: [
+            Text(type, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+            const Spacer(),
+            const Text('▼', style: TextStyle(fontSize: 10)),
+          ],
+        ),
       ),
     );
   }
