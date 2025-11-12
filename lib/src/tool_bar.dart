@@ -246,6 +246,8 @@ class ToolBar extends StatefulWidget {
 
   final bool? _isScrollable;
 
+  var activeBackgroundColor;
+
   ///[ToolBar] widget to show the quill
   /// The toolbar items will be auto aligned based on the screen's width or height
   /// The behaviour of the widget's alignment is similar to [Wrap] widget
@@ -266,7 +268,8 @@ class ToolBar extends StatefulWidget {
     this.padding,
     this.iconSize = 25,
     this.iconColor = Colors.black,
-    this.activeIconColor = Colors.blue,
+    this.activeIconColor = Colors.white,
+    this.activeBackgroundColor = Colors.black,
     this.toolBarColor = Colors.white,
     this.mainAxisSize,
   })  : assert(
@@ -415,6 +418,7 @@ class ToolBarState extends State<ToolBar> {
       for (var style in ToolBarStyle.values) {
         _toolbarList.add(ToolBarItem(
           activeIconColor: widget.activeIconColor!,
+          activeBackgroundColor: widget.activeBackgroundColor!,
           iconColor: widget.iconColor!,
           iconSize: widget.iconSize!,
           style: style,
@@ -426,6 +430,7 @@ class ToolBarState extends State<ToolBar> {
       for (var style in widget.toolBarConfig!) {
         _toolbarList.add(ToolBarItem(
             activeIconColor: widget.activeIconColor!,
+            activeBackgroundColor: widget.activeBackgroundColor!,
             iconColor: widget.iconColor!,
             iconSize: widget.iconSize!,
             style: style,
@@ -740,6 +745,7 @@ class ToolBarState extends State<ToolBar> {
             message: toolbarItem.style.name,
             child: ToolBarItem(
               activeIconColor: widget.activeIconColor!,
+              activeBackgroundColor: widget.activeBackgroundColor!,
               iconColor: widget.iconColor!,
               iconSize: widget.iconSize!,
               padding: _buttonPadding,
@@ -778,9 +784,6 @@ class ToolBarState extends State<ToolBar> {
                     }
                   }
                   toolbarItem = toolbarItem.copyWith(isActive: !toolbarItem.isActive);
-                  // } else if (toolbarItem.style == ToolBarStyle.alignLeft) {
-                  // } else if (toolbarItem.style == ToolBarStyle.alignCenter) {
-                  // } else if (toolbarItem.style == ToolBarStyle.alignRight) {
                 } else {
                   toolbarItem = toolbarItem.copyWith(isActive: !toolbarItem.isActive);
                 }
@@ -1359,6 +1362,9 @@ class ToolBarItem extends StatelessWidget {
   ///[activeIconColor] to define the active toolbar icon color
   final Color? activeIconColor;
 
+  /// [activeBackgroundColor] to define the active toolbar button's background color
+  final Color? activeBackgroundColor;
+
   ///[ToolBarItem] toolbaritem widget to show buttons based on style
   const ToolBarItem({
     super.key,
@@ -1368,21 +1374,30 @@ class ToolBarItem extends StatelessWidget {
     required this.iconSize,
     required this.iconColor,
     required this.activeIconColor,
+    required this.activeBackgroundColor,
     this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-        waitDuration: const Duration(milliseconds: 800),
-        message: style.name,
-        child: InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: padding,
-            child: SizedBox(child: _getIconByStyle(style)),
+      waitDuration: const Duration(milliseconds: 800),
+      message: style.name,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: padding,
+          child: Container(
+            // color: isActive ? activeBackgroundColor : Colors.transparent,
+            decoration: BoxDecoration(
+              color: isActive ? activeBackgroundColor : Colors.transparent,
+              borderRadius: BorderRadius.circular(3), // 원하는 값으로 둥글기 조절
+            ),
+            child: _getIconByStyle(style),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _getIconByStyle(ToolBarStyle style) {
@@ -1470,12 +1485,14 @@ class ToolBarItem extends StatelessWidget {
     bool? isActive,
   }) {
     return ToolBarItem(
-        style: style,
-        isActive: isActive ?? this.isActive,
-        padding: padding,
-        iconSize: iconSize,
-        iconColor: iconColor,
-        activeIconColor: activeIconColor);
+      style: style,
+      isActive: isActive ?? this.isActive,
+      padding: padding,
+      iconSize: iconSize,
+      iconColor: iconColor,
+      activeIconColor: activeIconColor,
+      activeBackgroundColor: activeBackgroundColor,
+    );
   }
 }
 

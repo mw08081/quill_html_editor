@@ -203,13 +203,11 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
           }
 
           if (snap.connectionState == ConnectionState.done) {
-            print('futer builder done');
             return LayoutBuilder(builder: (context, constraints) {
               _initialContent = _getQuillPage(width: constraints.maxWidth);
               return _buildEditorView(context: context, width: constraints.maxWidth);
             });
           } else {
-            print('futer builder loading');
             if (widget.loadingBuilder != null) {
               return widget.loadingBuilder!(context);
             } else {
@@ -228,7 +226,6 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
 
   Widget _buildEditorView({required BuildContext context, required double width}) {
     _initialContent = _getQuillPage(width: width);
-    print('editorLoaded : $_editorLoaded');
     return Stack(
       children: [
         WebViewX(
@@ -237,6 +234,9 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
           initialSourceType: SourceType.html,
           height: _currentHeight,
           onPageStarted: (s) {
+            // 이거 내가 주석처리했는데,
+            // 이거 주석 제거하면 _editorLoaded가 false -> true -> false가 되면서
+            // 로딩 인디케이터가 계속 표시돼 ..
             // _editorLoaded = false;
           },
           ignoreAllGestures: false,
