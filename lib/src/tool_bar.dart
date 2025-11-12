@@ -892,7 +892,6 @@ class ToolBarState extends State<ToolBar> {
               title: Text('가나다', style: TextStyle(fontSize: fontSizeList[index], color: Colors.black)),
               trailing: Text('${fontSizeList[index]}pt', style: const TextStyle(fontSize: 13, color: Colors.black)),
               onTap: () {
-                print(index);
                 var value = fontSizeValue[index];
 
                 _formatMap['size'] = value;

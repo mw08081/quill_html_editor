@@ -64,6 +64,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    double minHeight = 500;
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -153,7 +155,7 @@ class _MyAppState extends State<MyApp> {
                   controller: controller,
                   isEnabled: true,
                   ensureVisible: false,
-                  minHeight: 500,
+                  minHeight: minHeight,
                   autoFocus: false,
                   textStyle: _editorTextStyle,
                   hintTextStyle: _hintTextStyle,
@@ -164,11 +166,14 @@ class _MyAppState extends State<MyApp> {
                   inputAction: InputAction.newline,
                   onEditingComplete: (s) => debugPrint('Editing completed $s'),
                   loadingBuilder: (context) {
-                    return const Center(
-                        child: CircularProgressIndicator(
-                      strokeWidth: 1,
-                      color: Colors.red,
-                    ));
+                    return SizedBox(
+                      height: minHeight,
+                      child: const Center(
+                          child: CircularProgressIndicator(
+                        strokeWidth: 1,
+                        color: Colors.red,
+                      )),
+                    );
                   },
                   // onFocusChanged: (focus) {
                   //   debugPrint('has focus $focus');

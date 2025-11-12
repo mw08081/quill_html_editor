@@ -201,30 +201,34 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
           if (snap.hasData) {
             _quillJsScript = snap.data!;
           }
+
           if (snap.connectionState == ConnectionState.done) {
+            print('futer builder done');
             return LayoutBuilder(builder: (context, constraints) {
               _initialContent = _getQuillPage(width: constraints.maxWidth);
               return _buildEditorView(context: context, width: constraints.maxWidth);
             });
-          }
-
-          if (widget.loadingBuilder != null) {
-            return widget.loadingBuilder!(context);
           } else {
-            return SizedBox(
-              height: widget.minHeight,
-              child: const Center(
-                child: CircularProgressIndicator(
-                  strokeWidth: 0.3,
+            print('futer builder loading');
+            if (widget.loadingBuilder != null) {
+              return widget.loadingBuilder!(context);
+            } else {
+              return SizedBox(
+                height: widget.minHeight,
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 0.3,
+                  ),
                 ),
-              ),
-            );
+              );
+            }
           }
         });
   }
 
   Widget _buildEditorView({required BuildContext context, required double width}) {
     _initialContent = _getQuillPage(width: width);
+    print('editorLoaded : $_editorLoaded');
     return Stack(
       children: [
         WebViewX(
@@ -233,7 +237,7 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
           initialSourceType: SourceType.html,
           height: _currentHeight,
           onPageStarted: (s) {
-            _editorLoaded = false;
+            // _editorLoaded = false;
           },
           ignoreAllGestures: false,
           width: width,
@@ -408,7 +412,8 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
             visible: !_editorLoaded,
             child: widget.loadingBuilder != null
                 ? widget.loadingBuilder!(context)
-                : SizedBox(
+                : Container(
+                    color: Colors.blue,
                     height: widget.minHeight,
                     child: const Center(
                       child: CircularProgressIndicator(
