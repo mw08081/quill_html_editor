@@ -1572,7 +1572,7 @@ enum ToolBarStyle {
 
   /// [link] sets hyperlink to selected text
 
-  link("Hyperlink"),
+  link("링크 첨부"),
 
   /// [image] embeds image to the editor
 
