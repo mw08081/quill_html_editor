@@ -873,7 +873,7 @@ class ToolBarState extends State<ToolBar> {
   }
 
   Widget _getFontSizeWidget() {
-    final List<double> fontSizeList = [10, 14, 20, 36];
+    final List<double> fontSizeList = [8, 11, 24, 36];
     final List<String> fontSizeValue = ['small', 'normal', 'large', 'huge'];
     final fontSizeListIndex = fontSizeValue.indexOf(_formatMap['size'] ?? 'normal');
 
