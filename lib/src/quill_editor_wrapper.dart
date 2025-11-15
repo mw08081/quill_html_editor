@@ -246,49 +246,12 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
 
             // onPageFinished가 호출이 안돼..
             // 그래서 내가 직접 그냥 호춯하기로함
-            Future.delayed(const Duration(milliseconds: 0)).then((value) {
-              _editorLoaded = true;
-
-              if (mounted) {
-                setState(() {});
-              }
-              widget.controller.enableEditor(isEnabled);
-              if (widget.text != null) {
-                _setHtmlTextToEditor(htmlText: widget.text!);
-              }
-              if (widget.autoFocus == true) {
-                widget.controller.focus();
-              }
-              if (widget.onEditorCreated != null) {
-                widget.onEditorCreated!();
-              }
-              widget.controller._editorLoadedController?.add('');
-            });
+            onPageFinished(0);
           },
           ignoreAllGestures: false,
           width: width,
           onWebViewCreated: (controller) => _webviewController = controller,
-          onPageFinished: (src) {
-            print('on page Finished $src');
-            Future.delayed(const Duration(milliseconds: 100)).then((value) {
-              _editorLoaded = true;
-              debugPrint('_editorLoaded $_editorLoaded');
-              if (mounted) {
-                setState(() {});
-              }
-              widget.controller.enableEditor(isEnabled);
-              if (widget.text != null) {
-                _setHtmlTextToEditor(htmlText: widget.text!);
-              }
-              if (widget.autoFocus == true) {
-                widget.controller.focus();
-              }
-              if (widget.onEditorCreated != null) {
-                widget.onEditorCreated!();
-              }
-              widget.controller._editorLoadedController?.add('');
-            });
-          },
+          onPageFinished: (src) => onPageFinished(100),
           dartCallBacks: {
             DartCallback(
                 name: 'EditorResizeCallback',
@@ -451,6 +414,28 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
                   ))
       ],
     );
+  }
+
+  /// [onPageFinished] call when load finished
+  Future<void> onPageFinished(int delay) async {
+    Future.delayed(const Duration(milliseconds: 100)).then((value) {
+      _editorLoaded = true;
+      debugPrint('_editorLoaded $_editorLoaded');
+      if (mounted) {
+        setState(() {});
+      }
+      widget.controller.enableEditor(isEnabled);
+      if (widget.text != null) {
+        _setHtmlTextToEditor(htmlText: widget.text!);
+      }
+      if (widget.autoFocus == true) {
+        widget.controller.focus();
+      }
+      if (widget.onEditorCreated != null) {
+        widget.onEditorCreated!();
+      }
+      widget.controller._editorLoadedController?.add('');
+    });
   }
 
   /// a private method to get the Html text from the editor
