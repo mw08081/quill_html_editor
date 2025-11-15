@@ -185,7 +185,7 @@ class _MyAppState extends State<MyApp> {
                   // onTextChanged: (text) => debugPrint('widget text change $text'),
                   onEditorCreated: () {
                     debugPrint('Editor has been loaded');
-                    setHtmlText('Testing text on load');
+                    // setHtmlText('Testing text on load');
                   },
                   onEditorResized: (height) => debugPrint('Editor resized $height'),
                   // onSelectionChanged: (sel) => debugPrint('index ${sel.index}, range ${sel.length}'),

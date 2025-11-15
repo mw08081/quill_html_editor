@@ -204,7 +204,8 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
 
           if (snap.connectionState == ConnectionState.done) {
             return LayoutBuilder(builder: (context, constraints) {
-              _initialContent = _getQuillPage(width: constraints.maxWidth);
+              // 해당 코드는 _buildEditorView에서 constraints.maxWidth를 이용해서 호출됨(중복제거)
+              // _initialContent = _getQuillPage(width: constraints.maxWidth);
               return _buildEditorView(context: context, width: constraints.maxWidth);
             });
           } else {
@@ -226,6 +227,7 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
 
   Widget _buildEditorView({required BuildContext context, required double width}) {
     _initialContent = _getQuillPage(width: width);
+
     return Stack(
       children: [
         WebViewX(
@@ -233,16 +235,41 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
           initialContent: _initialContent,
           initialSourceType: SourceType.html,
           height: _currentHeight,
-          onPageStarted: (s) {
+          onPageStarted: (s) async {
             // 이거 내가 주석처리했는데,
             // 이거 주석 제거하면 _editorLoaded가 false -> true -> false가 되면서
             // 로딩 인디케이터가 계속 표시돼 ..
-            // _editorLoaded = false;
+            _editorLoaded = false;
+
+            // something do with await for load
+            // await ~
+
+            // onPageFinished가 호출이 안돼..
+            // 그래서 내가 직접 그냥 호춯하기로함
+            Future.delayed(const Duration(milliseconds: 0)).then((value) {
+              _editorLoaded = true;
+
+              if (mounted) {
+                setState(() {});
+              }
+              widget.controller.enableEditor(isEnabled);
+              if (widget.text != null) {
+                _setHtmlTextToEditor(htmlText: widget.text!);
+              }
+              if (widget.autoFocus == true) {
+                widget.controller.focus();
+              }
+              if (widget.onEditorCreated != null) {
+                widget.onEditorCreated!();
+              }
+              widget.controller._editorLoadedController?.add('');
+            });
           },
           ignoreAllGestures: false,
           width: width,
           onWebViewCreated: (controller) => _webviewController = controller,
           onPageFinished: (src) {
+            print('on page Finished $src');
             Future.delayed(const Duration(milliseconds: 100)).then((value) {
               _editorLoaded = true;
               debugPrint('_editorLoaded $_editorLoaded');
@@ -396,6 +423,7 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
                 name: 'EditorLoaded',
                 callBack: (map) {
                   _editorLoaded = true;
+
                   if (mounted) {
                     setState(() {});
                   }
