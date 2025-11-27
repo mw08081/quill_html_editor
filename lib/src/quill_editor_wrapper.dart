@@ -831,7 +831,6 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
         <body>
         
           <div class="floating-panel" id="floatPanel">
-            <div class="floating-panel-arrow"></div>
             <div class="floating-panel-content">
               <div class="floating-panel-group">
                 <button class="floating-panel-btn" onclick="setWidth(100)">100%</button>
