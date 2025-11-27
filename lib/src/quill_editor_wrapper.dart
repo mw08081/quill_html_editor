@@ -427,6 +427,8 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
       widget.controller.enableEditor(isEnabled);
       if (widget.text != null) {
         _setHtmlTextToEditor(htmlText: widget.text!);
+
+        _bindImageEvent();
       }
       if (widget.autoFocus == true) {
         widget.controller.focus();
@@ -501,6 +503,11 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
   /// a private method to embed the image to the editor
   Future _embedImage({required String imgSrc}) async {
     return await _webviewController.callJsMethod("embedImage", [imgSrc]);
+  }
+
+  /// a private method to bind event on image after load
+  Future _bindImageEvent() async {
+    return await _webviewController.callJsMethod("bindImageEvent", []);
   }
 
   /// a private method to enable/disable the editor
@@ -847,31 +854,7 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
             const floatPanel = document.getElementById('floatPanel');
             let currentImg = null;
             let originalWidth = null;
-        
-            // 모든 img 태그에 적용
-            document.querySelectorAll('img').forEach(img => {
-              img.addEventListener('click', function(e) {
-                console.log("on click img tag");
-              
-                e.stopPropagation();
-                currentImg = this;
-                // 최초 클릭 시, 원본 너비 기억
-                if(!currentImg.hasAttribute('data-original-width')) {
-                  currentImg.setAttribute('data-original-width', currentImg.naturalWidth);
-                }
-                originalWidth = parseInt(currentImg.getAttribute('data-original-width')) || currentImg.width;
-        
-                // 현재 이미지의 화면 위치
-                const rect = currentImg.getBoundingClientRect();
-                const pageX = rect.left + window.scrollX;
-                const pageY = rect.top + window.scrollY;
-        
-                floatPanel.style.display = 'flex';
-                floatPanel.style.left = (pageX + 18) + 'px';
-                floatPanel.style.top = (pageY + 18) + 'px';
-              });
-            });
-        
+       
             window.setWidth = function(percent) {
               if (currentImg) {
                 // 부모 너비 대비 percent%
@@ -1508,27 +1491,31 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
               if(range) {
                 quilleditor.insertEmbed(range.index, 'image', img);
                 
-                
-                document.querySelectorAll('img').forEach(img => {
-                  img.addEventListener('click', function(e) {
-                  
-                    e.stopPropagation();
-                    currentImg = this;
-                    
-                    // 최초 클릭 시, 원본 너비 기억
-                    if(!currentImg.hasAttribute('data-original-width')) {
-                      currentImg.setAttribute('data-original-width', currentImg.naturalWidth);
-                    }
-                    originalWidth = parseInt(currentImg.getAttribute('data-original-width')) || currentImg.width;
-            
-                    // 현재 클릭 위치
-                    floatPanel.style.display = 'flex';
-                    floatPanel.style.left = e.pageX + 'px';
-                    floatPanel.style.top = e.pageY + 'px';
-                  });
-                });
+                bindImageEvent();
               }
               return '';
+            }
+            
+            function bindImageEvent() {
+              console.log("bindImageEvent");
+              document.querySelectorAll('img').forEach(img => {
+                img.addEventListener('click', function(e) {
+                
+                  e.stopPropagation();
+                  currentImg = this;
+                  
+                  // 최초 클릭 시, 원본 너비 기억
+                  if(!currentImg.hasAttribute('data-original-width')) {
+                    currentImg.setAttribute('data-original-width', currentImg.naturalWidth);
+                  }
+                  originalWidth = parseInt(currentImg.getAttribute('data-original-width')) || currentImg.width;
+          
+                  // 현재 클릭 위치
+                  floatPanel.style.display = 'flex';
+                  floatPanel.style.left = e.pageX + 'px';
+                  floatPanel.style.top = e.pageY + 'px';
+                });
+              });
             }
             
             function enableEditor(isEnabled) {
