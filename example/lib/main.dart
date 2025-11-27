@@ -164,7 +164,7 @@ class _MyAppState extends State<MyApp> {
                   textStyle: _editorTextStyle,
                   hintTextStyle: _hintTextStyle,
                   hintTextAlign: TextAlign.start,
-                  padding: const EdgeInsets.only(left: 10, top: 10),
+                  padding: const EdgeInsets.all(10),
                   hintTextPadding: const EdgeInsets.only(left: 20),
                   backgroundColor: _backgroundColor,
                   inputAction: InputAction.newline,

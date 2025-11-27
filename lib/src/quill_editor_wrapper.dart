@@ -732,7 +732,6 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
             border-radius: 10px;
             cursor: pointer;
             transition: width 0.2s;
-            margin: 16px;
           }
           .floating-panel {
             position: absolute;
@@ -833,7 +832,7 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
           <div class="floating-panel" id="floatPanel">
             <div class="floating-panel-content">
               <div class="floating-panel-group">
-                <button class="floating-panel-btn" onclick="setWidth(100)">100%</button>
+                <button class="floating-panel-btn" onclick="setWidth(99.7)">100%</button>
                 <button class="floating-panel-btn" onclick="setWidth(75)">75%</button>
                 <button class="floating-panel-btn" onclick="setWidth(50)">50%</button>
                 <button class="floating-panel-btn" onclick="resetWidth()">원래대로</button>
