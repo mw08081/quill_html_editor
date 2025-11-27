@@ -573,6 +573,7 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
         <script>
         $_quillJsScript
         </script>
+        
         <style>
         /*!
        * Quill Editor v2.0.0-dev.3
@@ -719,10 +720,219 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
           width: 0;  /* Remove scrollbar space */
           background: transparent;  /* Optional: just make scrollbar invisible */
           } 
+          
+         
         </style>
+        <style>
+         img {
+            display: inline-block;
+            width: 100%
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: width 0.2s;
+            margin: 16px;
+          }
+          .floating-panel {
+            position: absolute;
+            z-index: 1060;
+            display: block;
+            font-size: 13px;
+            font-family: sans-serif;
+            display: none;
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 5px 0;
+          }
+
+          .floating-panel-content {
+            margin: 0;
+            padding: 0 0 5px 5px;
+            
+            display: flex;
+            flex-direction: row; /* 가로 정렬 */
+            align-items: flex-start; /* 세로정렬 (필요 시 조정 가능) */
+            gap: 5px; /* 그룹 간 간격 */
+          }
+          
+          .floating-panel-group {
+            margin-top: 5px;
+            margin-left: 0;
+            margin-right: 5px;
+            display: flex;
+          }
+          
+          .floating-panel-btn {
+            display: inline-block;
+            font-weight: 400;
+            margin-bottom: 0;
+            text-align: center;
+            vertical-align: middle;
+            touch-action: manipulation;
+            cursor: pointer;
+            background-image: none;
+            white-space: nowrap;
+            outline: 0;
+            color: #333;
+            background-color: #fff;
+            border: 1px solid #dae0e5;
+            padding: 5px 10px;
+            font-size: 11px;
+            line-height: 1.4;
+            border-radius: 3px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+          }
+          
+          
+          .floating-panel button:hover {
+            background: #d9d9d9;
+          }
+          
+          .floating-panel-arrow {
+            top: -11px;
+            left: 20px;
+            margin-left: -10px;
+            border-top-width: 0;
+            border-bottom-color: #999;
+            border-bottom-color: rgba(0,0,0,.25);
+          }
+          
+          .floating-panel-arrow:after {
+            top: 1px;
+            margin-left: -10px;
+            content: " ";
+            border-top-width: 0;
+            border-bottom-color: #fff;
+          }
+          
+          .floating-panel-arrow {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 11px solid transparent;
+          }
+          
+          .floating-panel-arrow:after {
+            position: absolute;
+            display: block;
+            width: 0;
+            height: 0;
+            content: " ";
+            border: 10px solid transparent;
+          }
+        </style>
+        
    
         </head>
         <body>
+        
+          <div class="floating-panel" id="floatPanel">
+            <div class="floating-panel-arrow"></div>
+            <div class="floating-panel-content">
+              <div class="floating-panel-group">
+                <button class="floating-panel-btn" onclick="setWidth(100)">100%</button>
+                <button class="floating-panel-btn" onclick="setWidth(75)">75%</button>
+                <button class="floating-panel-btn" onclick="setWidth(50)">50%</button>
+                <button class="floating-panel-btn" onclick="resetWidth()">원래대로</button>
+              </div>
+              <div class="floating-panel-group">
+                <button class="floating-panel-btn" onclick="deleteElement()">삭제</button>
+              </div>
+            </div>
+          </div>
+
+          <script>
+            const floatPanel = document.getElementById('floatPanel');
+            let currentImg = null;
+            let originalWidth = null;
+        
+            // 모든 img 태그에 적용
+            document.querySelectorAll('img').forEach(img => {
+              img.addEventListener('click', function(e) {
+                console.log("on click img tag");
+              
+                e.stopPropagation();
+                currentImg = this;
+                // 최초 클릭 시, 원본 너비 기억
+                if(!currentImg.hasAttribute('data-original-width')) {
+                  currentImg.setAttribute('data-original-width', currentImg.naturalWidth);
+                }
+                originalWidth = parseInt(currentImg.getAttribute('data-original-width')) || currentImg.width;
+        
+                // 현재 이미지의 화면 위치
+                const rect = currentImg.getBoundingClientRect();
+                const pageX = rect.left + window.scrollX;
+                const pageY = rect.top + window.scrollY;
+        
+                floatPanel.style.display = 'flex';
+                floatPanel.style.left = (pageX + 18) + 'px';
+                floatPanel.style.top = (pageY + 18) + 'px';
+              });
+            });
+        
+            window.setWidth = function(percent) {
+              if (currentImg) {
+                // 부모 너비 대비 percent%
+                currentImg.style.width = percent + "%";
+            
+                // 패널 위치 갱신
+                setTimeout(() => {
+                  const rect = currentImg.getBoundingClientRect();
+                  const pageX = rect.left + window.scrollX;
+                  const pageY = rect.top + window.scrollY;
+                  floatPanel.style.left = (pageX + 18) + 'px';
+                  floatPanel.style.top = (pageY + 18) + 'px';
+                }, 220);
+              }
+            };
+            
+            window.resetWidth = function() {
+              const img = document.querySelector('img');
+              const originalWidth = img.getAttribute('data-original-width');
+              if (originalWidth) {
+                img.style.width = originalWidth + 'px'; // 원래 너비로 설정
+              } else {
+                img.style.width = ''; // 없으면 스타일 제거
+              }
+            }
+            
+            window.deleteElement = function() {
+              if(currentImg) {
+                console.log(currentImg);
+                currentImg.parentNode.removeChild(currentImg);
+                currentImg = null;
+                
+                closePanel();
+              }
+            }
+        
+            window.closePanel = function() {
+              floatPanel.style.display = 'none';
+              currentImg = null;
+              originalWidth = null;
+            }
+        
+            document.addEventListener('click', function(e) {
+              if (
+                floatPanel.style.display === 'flex' &&
+                !(e.target.tagName === 'IMG') &&
+                !floatPanel.contains(e.target)
+              ) {
+                closePanel();
+              }
+            });
+        
+            // window 크기 변경 시 패널 닫기
+            window.addEventListener('resize', function() {
+              closePanel();
+            });
+          </script>
+        
+        
          <script>
            const resizeObserver = new ResizeObserver(entries =>{
             ///console.log("Offset height has changed:", (entries[0].target.clientHeight).toString())
@@ -1299,6 +1509,26 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
               var range = quilleditor.getSelection(true);
               if(range) {
                 quilleditor.insertEmbed(range.index, 'image', img);
+                
+                
+                document.querySelectorAll('img').forEach(img => {
+                  img.addEventListener('click', function(e) {
+                  
+                    e.stopPropagation();
+                    currentImg = this;
+                    
+                    // 최초 클릭 시, 원본 너비 기억
+                    if(!currentImg.hasAttribute('data-original-width')) {
+                      currentImg.setAttribute('data-original-width', currentImg.naturalWidth);
+                    }
+                    originalWidth = parseInt(currentImg.getAttribute('data-original-width')) || currentImg.width;
+            
+                    // 현재 클릭 위치
+                    floatPanel.style.display = 'flex';
+                    floatPanel.style.left = e.pageX + 'px';
+                    floatPanel.style.top = e.pageY + 'px';
+                  });
+                });
               }
               return '';
             }

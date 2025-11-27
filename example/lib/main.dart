@@ -89,6 +89,9 @@ class _MyAppState extends State<MyApp> {
                   ToolBarStyle.alignLeft,
                   ToolBarStyle.alignCenter,
                   ToolBarStyle.alignRight,
+                  ToolBarStyle.separator,
+                  ToolBarStyle.image,
+                  ToolBarStyle.video,
                   ToolBarStyle.separator
                 ],
                 toolBarColor: _toolbarColor,
