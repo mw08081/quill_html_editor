@@ -732,15 +732,9 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
         </style>
         <style>
           .ql-video {
-            width: 100%;
+            width: 40%;
             aspect-ratio: 16 / 9; 
             display: block;
-          }
-        
-          .ql-video iframe {
-            width: 100%;
-            height: 100%;
-            border: 0;
           }
 
          img {
