@@ -1566,10 +1566,11 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
                       console.log('naturalWidth:', newImg.naturalWidth);
                     } else {
                       newImg.onload = () => {
-                        console.log('naturalWidth:', newImg.naturalWidth);
+                        console.log('naturalWidth(onload):', newImg.naturalWidth);
+                        bindImageEvent(newImg); 
                       };
                     }
-                    bindImageEvent(newImg);  // 필요 시
+                    bindImageEvent(newImg); 
                   }
                 }, 0);
               }
