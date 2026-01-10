@@ -1551,12 +1551,27 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
               return '';
             }
             
-            function embedImage(img) {
+            function embedImage(imgSrc) {
               var range = quilleditor.getSelection(true);
               if(range) {
-                quilleditor.insertEmbed(range.index, 'image', img);
+                quilleditor.insertEmbed(range.index, 'image', imgSrc);
+                
                                 
-                bindImageEvent();
+                // bindImageEvent();
+                var escapedSrc = CSS.escape(imgSrc);
+                setTimeout(() => {
+                  var newImg = quilleditor.root.querySelector('img[src="' + escapedSrc + '"]');
+                  if (newImg) {
+                    if (newImg.complete) {
+                      console.log('naturalWidth:', newImg.naturalWidth);
+                    } else {
+                      newImg.onload = () => {
+                        console.log('naturalWidth:', newImg.naturalWidth);
+                      };
+                    }
+                    bindImageEvent(newImg);  // 필요 시
+                  }
+                }, 0);
               }
               return '';
             }
@@ -1573,7 +1588,7 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
                 // console.log(window.innerWidth);
                 // console.log(img.naturalWidth > window.innerWidth);
                     
-                
+                // setTimeout(checkImages, 100);
                 if(img.naturalWidth > window.innerWidth) {
                   console.log('this img has to be resized');
                   img.style.width = "99.7%";
