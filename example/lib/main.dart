@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
 
@@ -52,6 +53,26 @@ class _MyAppState extends State<MyApp> {
     controller.onEditorLoaded(() {
       debugPrint('Editor Loaded :)');
     });
+
+    html.window.onMessage.listen((html.MessageEvent event) {
+      final data = event.data; // String 또는 dynamic
+
+      if (data['action'] == 'GetEmbeddedImageHeight') {
+        final value = data['value'];
+        final intValue = (value is int) ? value : int.parse(value.toString());
+        if (mounted) {
+          print('GetEmbeddedImageHeight: $intValue');
+        }
+      }
+    });
+
+    // html.window.onMessage.listen((event) {
+    //   if (event.data == 'GetEmbeddedImageHeight') {
+    //     if (mounted) {
+    //       print('GetEmbeddedImageHeight: ${event.data['value'].toString()}');
+    //     }
+    //   }
+    // });
     super.initState();
   }
 
@@ -183,8 +204,9 @@ class _MyAppState extends State<MyApp> {
               ),
               Expanded(
                 child: QuillHtmlEditor(
-                  text:
-                      '''<p><img src="https://storage.googleapis.com/ijit-public-gcs/user_uploads/octa.jpg" data-original-width="236" style="width: 99.7%;">...</p>''',
+                  //text:
+                  //     '''<p><img src="https://storage.googleapis.com/ijit-public-gcs/user_uploads/octa.jpg" data-original-width="236" style="width: 99.7%;">...</p>''',
+                  text: null,
                   hintText: 'Hint text goes here',
                   controller: controller,
                   isEnabled: true,
