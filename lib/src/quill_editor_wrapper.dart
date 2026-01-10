@@ -172,6 +172,7 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
   late double _currentHeight;
   bool _hasFocus = false;
   String _quillJsScript = '';
+
   late Future _loadScripts;
   late String _fontFamily;
   late String _encodedStyle;
@@ -179,6 +180,7 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
   @override
   initState() {
     _loadScripts = rootBundle.loadString('packages/quill_html_editor/assets/scripts/quill_2.0.0_4_min.js');
+
     _fontFamily = widget.textStyle?.fontFamily ?? 'Roboto';
     _encodedStyle = Uri.encodeFull(_fontFamily);
     isEnabled = widget.isEnabled;
@@ -510,6 +512,14 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
     return await _webviewController.callJsMethod("bindImageEvent", []);
   }
 
+  Future _insertFileBoxToEditor({
+    required String src,
+    required String name,
+    int? index,
+  }) async {
+    return await _webviewController.callJsMethod("printLog", []);
+  }
+
   /// a private method to enable/disable the editor
   Future _enableTextEditor({required bool isEnabled}) async {
     return await _webviewController.callJsMethod("enableEditor", [isEnabled]);
@@ -579,6 +589,10 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
        <!-- Include the Quill library --> 
         <script>
         $_quillJsScript
+        </script>
+        <script>
+        
+
         </script>
         
         <style>
@@ -837,7 +851,38 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
             border: 10px solid transparent;
           }
         </style>
-        
+   
+        <style>
+            .file-box {
+                display: flex;
+                align-items: center;
+                width: 300px;
+                height: 60px;
+                border: 2px solid #ddd;
+                border-radius: 8px;
+                padding: 12px 16px;
+                background: #f9f9f9;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            }
+            .file-box:hover {
+                background: #f0f0f0;
+                border-color: #bbb;
+                cursor: pointer;
+            }
+            .file-icon {
+                width: 36px;
+                height: 36px;
+                margin-right: 12px;
+                flex-shrink: 0;
+            }
+            .file-name {
+                font-weight: 500;
+                color: #333;
+                font-size: 14px;
+                margin: 0;
+            }
+        </style>
    
         </head>
         <body>
@@ -1167,7 +1212,9 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
            // stops the listener
            //// observer.disconnect();
           
-        
+           const Image = Quill.import('formats/image');
+           Quill.register(Image, true);
+
            //// to accept all link formats 
            var Link = Quill.import('formats/link');
               Link.sanitize = function(url) {
@@ -1222,6 +1269,10 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
               }
               Quill.register(Breaker);
 
+              class FileBoxBlot extends Embed {}
+              Quill.register(FileBoxBlot);
+              
+            const Delta = Quill.import('delta');
             var quilleditor = new Quill('#editor', {
               modules: {
                 toolbar: '#toolbar-container',
@@ -1234,11 +1285,19 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
                 }
               },
               theme: 'snow',
-             scrollingContainer: '#scrolling-container', 
+              scrollingContainer: '#scrolling-container', 
               placeholder: '${widget.hintText ?? "Description"}',
               clipboard: {
                 matchVisual: true
               }
+            });
+            
+            quilleditor.clipboard.addMatcher('IMG', function(node, delta) {
+              return new Delta().insert({
+                image: node.getAttribute('src'),
+                'data-original-width': node.getAttribute('data-original-width'),
+                style: node.getAttribute('style')
+              });
             });
             
           
@@ -1496,7 +1555,7 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
               var range = quilleditor.getSelection(true);
               if(range) {
                 quilleditor.insertEmbed(range.index, 'image', img);
-                
+                                
                 bindImageEvent();
               }
               return '';
@@ -1504,8 +1563,17 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
             
             function bindImageEvent() {
               document.querySelectorAll('img').forEach(img => {
-                img.addEventListener('click', function(e) {
+              
                 
+                // 임시코드: 이미지너비가 현재 window보다 크면 강제적으로 부모너비에 맞춰지도록 설정
+                // 해당 설정을 하지않으면 에디터 스크린에서 스크롤바가 생김
+                // 하지만 해당 코드를 제거해야하는이유는 원본크기로 사진을 보여줄수 없다는 단점
+                // 아니면 차라리 이미지를 선택했을때, 원본사이즈로 보여주는 기능을 추가하는것도 나쁘지 않을 것으로 보임.
+                if(img.naturalWidth > window.innerWidth) {
+                  img.style.width = "99.7%";
+                }
+                             
+                img.addEventListener('click', function(e) {
                   e.stopPropagation();
                   currentImg = this;
                   
@@ -1522,6 +1590,41 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
                 });
               });
             }
+            
+            function printLog() {
+                console.log('print log');
+                
+                const container = document.querySelector('#target'); // 넣을 위치
+                container.innerHTML += `
+                  <div>
+                    <div class="file-box"
+                         onclick="downloadFile('https://storage.googleapis.com/ijit-public-gcs/static/download.png', 'download.png')">
+                      <img src="https://storage.googleapis.com/ijit-public-gcs/static/download.png"
+                           alt="파일 아이콘"
+                           class="file-icon">
+                      <span class="file-name">download.png</span>
+                    </div>
+                  </div>
+                `;
+            }
+            
+            
+            function insertFileBox(src, name, index) {
+              console.log('insertFileBox.js');
+              console.log(src);
+              if (index == null) {
+                const range = quilleditor.getSelection(true);
+                if (!range) return '';
+                index = range.index;
+              }
+            
+              // quilleditor.insertEmbed(index, 'image', src);
+              quilleditor.insertEmbed(index, 'fileBox', { src, name }, 'user');
+              // 커서 파일 블록 뒤로 이동
+              // quilleditor.setSelection(index + 1, 0, 'silent');
+              return '';
+            }
+
             
             function enableEditor(isEnabled) {
               quilleditor.enable(isEnabled);
@@ -1709,6 +1812,16 @@ class QuillEditorController {
   /// [embedImage] method is used to insert image to the editor
   Future embedImage(String imgSrc) async {
     return await _editorKey?.currentState?._embedImage(imgSrc: imgSrc);
+  }
+
+  ///
+  /// 커스텀: 파일 삽입
+  Future insertFile({
+    required String src,
+    required String name,
+    int? index,
+  }) async {
+    return await _editorKey?.currentState?._insertFileBoxToEditor(src: src, name: name, index: index);
   }
 
   /// [enableEditor] method is used to enable/ disable the editor,

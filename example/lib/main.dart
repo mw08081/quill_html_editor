@@ -122,7 +122,36 @@ class _MyAppState extends State<MyApp> {
                       waitDuration: const Duration(milliseconds: 800),
                       message: '파일 첨부',
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () async {
+                          const fileSrc =
+                              "https://storage.googleapis.com/ijit-public-gcs/user_uploads/%E1%84%89%E1%85%B5%E1%86%AF%E1%84%89%E1%85%B3%E1%86%B8%E1%84%91%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%AF.xlsx";
+                          const fileImgSrc = "https://storage.googleapis.com/ijit-public-gcs/static/download.png";
+
+                          if (fileSrc.isNotEmpty) {
+                            // final selectionRange = await controller.getSelectionRange();
+                            //
+
+                            // controller.insertText('''
+                            // <div class="file-box">
+                            //     <img class="file-icon" src="https://storage.googleapis.com/ijit-public-gcs/static/file.png" alt="파일아이콘" class="file-icon">
+                            //     <span class="file-name">file.png</span>
+                            // </div>
+                            // ''');
+
+                            // controller.insertText('''
+                            // <a href=$fileSrc rel="noopener noreferrer" target="_blank">
+                            //   <span class="ql-cursor">
+                            //     파일명: 어저고 저쩌고 세상엔 진상이 너무 많다...avi<img src="https://storage.googleapis.com/ijit-public-gcs/static/download.png">
+                            //   </span>
+                            // </a>
+                            // ''');
+
+                            // controller.insertText('''
+                            // <div class="file-box">
+                            // </div>
+                            // ''');
+                          }
+                        },
                         child: const SizedBox(child: Icon(Icons.file_present_rounded, color: Colors.black)),
                       )),
                   // Container(
@@ -154,7 +183,8 @@ class _MyAppState extends State<MyApp> {
               ),
               Expanded(
                 child: QuillHtmlEditor(
-                  text: "<h1>Hello</h1>This is a quill html editor example 😊",
+                  text:
+                      '''<p><img src="https://storage.googleapis.com/ijit-public-gcs/user_uploads/octa.jpg" data-original-width="236" style="width: 99.7%;">...</p>''',
                   hintText: 'Hint text goes here',
                   controller: controller,
                   isEnabled: true,
