@@ -420,7 +420,7 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
 
   /// [onPageFinished] call when load finished
   Future<void> onPageFinished(int delay) async {
-    Future.delayed(const Duration(milliseconds: 100)).then((value) {
+    Future.delayed(const Duration(milliseconds: 100)).then((value) async {
       _editorLoaded = true;
       debugPrint('_editorLoaded $_editorLoaded');
       if (mounted) {
@@ -428,7 +428,9 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
       }
       widget.controller.enableEditor(isEnabled);
       if (widget.text != null) {
+        print(widget.text!);
         _setHtmlTextToEditor(htmlText: widget.text!);
+        print(await widget.controller.getText());
 
         _bindImgEventOnLoad();
       }
