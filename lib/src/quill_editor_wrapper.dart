@@ -1606,35 +1606,31 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
             }
             
             function bindImgEventOnLoad() {
-                document.querySelectorAll('img').forEach(img => {
+  // 개별 bind 대신 document 하나에 위임
+  document.addEventListener('click', function(e) {
+    // 클릭된 요소가 img인지 확인
+    const img = e.target.closest('img');
+    if (!img) return;
 
+    e.stopPropagation();
+    currentImg = img;
 
-                // 임시코드: 이미지너비가 현재 window보다 크면 강제적으로 부모너비에 맞춰지도록 설정
-                // 해당 설정을 하지않으면 에디터 스크린에서 스크롤바가 생김
-                // 하지만 해당 코드를 제거해야하는이유는 원본크기로 사진을 보여줄수 없다는 단점
-                // 아니면 차라리 이미지를 선택했을때, 원본사이즈로 보여주는 기능을 추가하는것도 나쁘지 않을 것으로 보임.
-                if(img.naturalWidth > window.innerWidth) {
-                  console.log('this img has to be resized');
-                  img.style.width = "99.7%";
-                }
+    // 이미지 로드 여부와 상관없이 클릭 시점에 데이터 세팅
+    if (!currentImg.hasAttribute('data-original-width')) {
+      const naturalW = currentImg.naturalWidth;
+      // 만약 아직 로드가 안 되어 0이라면 현재 width라도 대입
+      currentImg.setAttribute('data-original-width', naturalW > 0 ? naturalW : currentImg.width);
+    }
+    
+    originalWidth = parseInt(currentImg.getAttribute('data-original-width'));
 
-                img.addEventListener('click', function(e) {
-                  e.stopPropagation();
-                  currentImg = this;
-
-                  // 최초 클릭 시, 원본 너비 기억
-                  if(!currentImg.hasAttribute('data-original-width')) {
-                    currentImg.setAttribute('data-original-width', currentImg.naturalWidth);
-                  }
-                  originalWidth = parseInt(currentImg.getAttribute('data-original-width')) || currentImg.width;
-
-                  // 현재 클릭 위치
-                  floatPanel.style.display = 'flex';
-                  floatPanel.style.left = e.pageX + 'px';
-                  floatPanel.style.top = e.pageY + 'px';
-                });
-              });
-            }
+    floatPanel.style.display = 'flex';
+    floatPanel.style.left = e.pageX + 'px';
+    floatPanel.style.top = e.pageY + 'px';
+  });
+}
+            
+            
             
             function printLog() {
                 console.log('print log');
