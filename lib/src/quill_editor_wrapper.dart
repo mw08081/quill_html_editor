@@ -1625,6 +1625,12 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
                 
                 const styleAttr = img.getAttribute('style') || "";
                 
+                console.log('Target Image Element:', img); // 여기서 style 속성이 보이는지 확인!
+                console.log({
+                    hasAttribute: img.hasAttribute('style'), // style 속성이 있긴 한지 체크
+                    allAttributes: img.getAttributeNames()    // 이 이미지가 가진 모든 속성 목록 출력
+                });
+                
                 console.log({
                   innerWidth: window.innerWidth,
                   natural: img.naturalWidth, // 원본 너비
