@@ -1623,17 +1623,19 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
                 // 3. 실제 렌더링된 정확한 너비 (소수점 포함)
                 const preciseWidth = img.getBoundingClientRect().width;
                 
+                const styleAttr = img.getAttribute('style') || "";
+                
                 console.log({
                   innerWidth: window.innerWidth,
                   natural: img.naturalWidth, // 원본 너비
-                  style: img.style.width,      // 인라인 스타일로 지정된 값 (50%)
+                  styleAttr: styleAttr,      // 인라인 스타일로 지정된 값 (50%)
                   current: img.clientWidth,   // 현재 렌더링 너비
                   offset: img.offsetWidth,
                   preciseWidth: img.getBoundingClientRect().width,
                 });
                 
                 
-                if(img.naturalWidth > window.innerWidth) {
+                if(!styleAttr.includes('%') && img.naturalWidth > window.innerWidth) {
                   console.log('this img has to be resized');
                   img.style.width = "99.7%";
                 }
