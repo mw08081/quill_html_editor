@@ -204,9 +204,10 @@ class _MyAppState extends State<MyApp> {
               ),
               Expanded(
                 child: QuillHtmlEditor(
-                  //text:
-                  //     '''<p><img src="https://storage.googleapis.com/ijit-public-gcs/user_uploads/octa.jpg" data-original-width="236" style="width: 99.7%;">...</p>''',
-                  text: null,
+                  text:
+                      // '''<p><img src="https://storage.googleapis.com/ijit-public-gcs/user_uploads/3uZG6idIyb.png" width="50%"></p>''',
+                      '''<p><img src="https://storage.googleapis.com/ijit-public-gcs/user_uploads/4vUpSmKTmy.png" style="width: 50%;" data-original-width="724"></p>''',
+                  // text: null,
                   hintText: 'Hint text goes here',
                   controller: controller,
                   isEnabled: true,

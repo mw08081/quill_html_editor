@@ -422,15 +422,13 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
   Future<void> onPageFinished(int delay) async {
     Future.delayed(const Duration(milliseconds: 100)).then((value) async {
       _editorLoaded = true;
-      debugPrint('_editorLoaded $_editorLoaded');
+      // debugPrint('_editorLoaded $_editorLoaded');
       if (mounted) {
         setState(() {});
       }
       widget.controller.enableEditor(isEnabled);
       if (widget.text != null) {
-        print(widget.text!);
         _setHtmlTextToEditor(htmlText: widget.text!);
-        print(await widget.controller.getText());
 
         _bindImgEventOnLoad();
       }
@@ -1463,7 +1461,6 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
             }
             
             function setHtmlText(htmlString) {
-            console.log(htmlString);
             try{
                quilleditor.enable(false);
                quilleditor.clipboard.dangerouslyPasteHTML(htmlString);   
@@ -1616,34 +1613,6 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
                 // 해당 설정을 하지않으면 에디터 스크린에서 스크롤바가 생김
                 // 하지만 해당 코드를 제거해야하는이유는 원본크기로 사진을 보여줄수 없다는 단점
                 // 아니면 차라리 이미지를 선택했을때, 원본사이즈로 보여주는 기능을 추가하는것도 나쁘지 않을 것으로 보임.
-                
-                // 1. 패딩 포함 너비 (정수)
-                const currentWidth = img.clientWidth; 
-                
-                // 2. 패딩 + 보더 포함 너비 (정수)
-                const offsetWidth = img.offsetWidth;
-                
-                // 3. 실제 렌더링된 정확한 너비 (소수점 포함)
-                const preciseWidth = img.getBoundingClientRect().width;
-                
-                const styleAttr = img.getAttribute('style') || "";
-                
-                console.log('Target Image Element:', img); // 여기서 style 속성이 보이는지 확인!
-                console.log({
-                    hasAttribute: img.hasAttribute('style'), // style 속성이 있긴 한지 체크
-                    allAttributes: img.getAttributeNames()    // 이 이미지가 가진 모든 속성 목록 출력
-                });
-                
-                console.log({
-                  innerWidth: window.innerWidth,
-                  natural: img.naturalWidth, // 원본 너비
-                  styleAttr: styleAttr,      // 인라인 스타일로 지정된 값 (50%)
-                  current: img.clientWidth,   // 현재 렌더링 너비
-                  offset: img.offsetWidth,
-                  preciseWidth: img.getBoundingClientRect().width,
-                });
-                
-                
                 if(img.clientWidth > window.innerWidth) {
                   console.log('this img has to be resized');
                   img.style.width = "99.7%";
