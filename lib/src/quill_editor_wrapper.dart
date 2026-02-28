@@ -1641,7 +1641,7 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
                 });
                 
                 
-                if(!styleAttr.includes('%') && img.naturalWidth > window.innerWidth) {
+                if(img.clientWidth > window.innerWidth) {
                   console.log('this img has to be resized');
                   img.style.width = "99.7%";
                 }
