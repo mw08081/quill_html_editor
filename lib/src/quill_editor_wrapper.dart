@@ -1613,7 +1613,7 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
                 // 해당 설정을 하지않으면 에디터 스크린에서 스크롤바가 생김
                 // 하지만 해당 코드를 제거해야하는이유는 원본크기로 사진을 보여줄수 없다는 단점
                 // 아니면 차라리 이미지를 선택했을때, 원본사이즈로 보여주는 기능을 추가하는것도 나쁘지 않을 것으로 보임.
-                if(img.clientWidth > window.innerWidth) {
+                if(img.naturalWidth > window.innerWidth) {
                   console.log('this img has to be resized');
                   img.style.width = "99.7%";
                 }
