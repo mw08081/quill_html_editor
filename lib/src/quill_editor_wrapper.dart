@@ -1187,17 +1187,50 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
             // select the target node
             var target = document.querySelector('#editor');
             
+            target.addEventListener('paste', function (e) {
+               var clipboardData = e.clipboardData || window.clipboardData;
+            
+                if (!clipboardData) {
+                    console.log("클립보드 데이터를 읽을 수 없습니다.");
+                    return;
+                }
+            
+                var items = clipboardData.items;
+                if (!items) return;
+                
+                hasImage = false;
+                for (var i = 0; i < items.length; i++) {
+                    if (items[i].type.indexOf('image') !== -1) {
+                        hasImage = true;
+                        break;
+                    }
+                }
+            
+                if (hasImage) {
+                    // 1. 브라우저의 기본 붙여넣기 동작을 막음 (Base64 삽입 방지)
+                    e.preventDefault();
+            
+                    // 2. 사용자에게 알림 (에디터 내부에 커스텀 알림을 띄우거나 Dart로 신호 전송)
+                    alert("이미지는 상단 이미지 추가버튼을 통해서만 첨부할 수 있습니다.");
+                    
+                    // (옵션) Dart 콜백이 필요하다면 아래처럼 호출 가능
+                    // if($kIsWeb) { OnImageBlocked("blocked"); } else { OnImageBlocked.postMessage("blocked"); }
+                    
+                    return false;
+                }
+            }, true);
+            
             // create an observer instance
             var tempText = "";
             var observer = new MutationObserver(function(mutations) {
                  var text = quilleditor.root.innerHTML; 
                  if(text != tempText){
-                      tempText = text;
+                     tempText = text;
                      if($kIsWeb) {
                       OnTextChanged(text);
-                    } else {
-                      OnTextChanged.postMessage(text);
-                    }
+                     } else {
+                        OnTextChanged.postMessage(text);
+                     }
                      onRangeChanged(); 
                      quilleditor.focus();
                  }
@@ -1495,6 +1528,7 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
                     quilleditor.setSelection(htmlString.length + 1, htmlString.length + 1);
                     quilleditor.focus();
                }, 10);
+               // delay time 600 -> 10 으로 임의 직접조정함
               }catch(e){
                 console.log('requestFocus',e);
               }
