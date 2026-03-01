@@ -1494,7 +1494,7 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
                setTimeout(() => {
                     quilleditor.setSelection(htmlString.length + 1, htmlString.length + 1);
                     quilleditor.focus();
-               }, 600);
+               }, 10);
               }catch(e){
                 console.log('requestFocus',e);
               }
@@ -1605,33 +1605,32 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
                 });
             }
             
+            
+            // 커스텀 코드
             function bindImgEventOnLoad() {
-  // 개별 bind 대신 document 하나에 위임
-  document.addEventListener('click', function(e) {
-    // 클릭된 요소가 img인지 확인
-    const img = e.target.closest('img');
-    if (!img) return;
-
-    e.stopPropagation();
-    currentImg = img;
-
-    // 이미지 로드 여부와 상관없이 클릭 시점에 데이터 세팅
-    if (!currentImg.hasAttribute('data-original-width')) {
-      const naturalW = currentImg.naturalWidth;
-      // 만약 아직 로드가 안 되어 0이라면 현재 width라도 대입
-      currentImg.setAttribute('data-original-width', naturalW > 0 ? naturalW : currentImg.width);
-    }
-    
-    originalWidth = parseInt(currentImg.getAttribute('data-original-width'));
-
-    floatPanel.style.display = 'flex';
-    floatPanel.style.left = e.pageX + 'px';
-    floatPanel.style.top = e.pageY + 'px';
-  });
-}
+              document.addEventListener('click', function(e) {
+                
+                const img = e.target.closest('img');
+                if (!img) return;
+            
+                e.stopPropagation();
+                currentImg = img;
+            
+                if (!currentImg.hasAttribute('data-original-width')) {
+                  const naturalW = currentImg.naturalWidth;
+                  currentImg.setAttribute('data-original-width', naturalW > 0 ? naturalW : currentImg.width);
+                }
+                
+                originalWidth = parseInt(currentImg.getAttribute('data-original-width'));
+            
+                floatPanel.style.display = 'flex';
+                floatPanel.style.left = e.pageX + 'px';
+                floatPanel.style.top = e.pageY + 'px';
+              });
+            } 
             
             
-            
+            // 파일아이콘 삽입을 위한 테스트 코드 (개발중)..
             function printLog() {
                 console.log('print log');
                 
