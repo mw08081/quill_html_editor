@@ -95,6 +95,51 @@ class _MyAppState extends State<MyApp> {
           padding: const EdgeInsets.symmetric(horizontal: 200),
           child: Column(
             children: [
+              Expanded(
+                child: QuillHtmlEditor(
+                  text:
+                      // '''<p><img src="https://storage.googleapis.com/ijit-public-gcs/user_uploads/3uZG6idIyb.png" width="50%"></p>''',
+                      '''<p><img src="https://storage.googleapis.com/ijit-public-gcs/user_uploads/4vUpSmKTmy.png" style="width: 50%;" data-original-width="724"></p>''',
+                  // text: null,
+                  hintText: 'Hint text goes here',
+                  controller: controller,
+                  isEnabled: true,
+                  ensureVisible: false,
+                  minHeight: minHeight,
+                  autoFocus: false,
+                  textStyle: _editorTextStyle,
+                  hintTextStyle: _hintTextStyle,
+                  hintTextAlign: TextAlign.start,
+                  padding: const EdgeInsets.all(10),
+                  hintTextPadding: const EdgeInsets.only(left: 20),
+                  backgroundColor: _backgroundColor,
+                  inputAction: InputAction.newline,
+                  onEditingComplete: (s) => debugPrint('Editing completed $s'),
+                  loadingBuilder: (context) {
+                    return SizedBox(
+                      height: minHeight,
+                      child: const Center(
+                          child: CircularProgressIndicator(
+                        strokeWidth: 1,
+                        color: Colors.red,
+                      )),
+                    );
+                  },
+                  // onFocusChanged: (focus) {
+                  //   debugPrint('has focus $focus');
+                  //   setState(() {
+                  //     _hasFocus = focus;
+                  //   });
+                  // },
+                  // onTextChanged: (text) => debugPrint('widget text change $text'),
+                  onEditorCreated: () {
+                    debugPrint('Editor has been loaded');
+                    // setHtmlText('Testing text on load');
+                  },
+                  onEditorResized: (height) => debugPrint('Editor resized $height'),
+                  // onSelectionChanged: (sel) => debugPrint('index ${sel.index}, range ${sel.length}'),
+                ),
+              ),
               ToolBar(
                 toolBarConfig: const [
                   ToolBarStyle.size,
@@ -201,51 +246,6 @@ class _MyAppState extends State<MyApp> {
                   //       color: Colors.black,
                   //     )),
                 ],
-              ),
-              Expanded(
-                child: QuillHtmlEditor(
-                  text:
-                      // '''<p><img src="https://storage.googleapis.com/ijit-public-gcs/user_uploads/3uZG6idIyb.png" width="50%"></p>''',
-                      '''<p><img src="https://storage.googleapis.com/ijit-public-gcs/user_uploads/4vUpSmKTmy.png" style="width: 50%;" data-original-width="724"></p>''',
-                  // text: null,
-                  hintText: 'Hint text goes here',
-                  controller: controller,
-                  isEnabled: true,
-                  ensureVisible: false,
-                  minHeight: minHeight,
-                  autoFocus: false,
-                  textStyle: _editorTextStyle,
-                  hintTextStyle: _hintTextStyle,
-                  hintTextAlign: TextAlign.start,
-                  padding: const EdgeInsets.all(10),
-                  hintTextPadding: const EdgeInsets.only(left: 20),
-                  backgroundColor: _backgroundColor,
-                  inputAction: InputAction.newline,
-                  onEditingComplete: (s) => debugPrint('Editing completed $s'),
-                  loadingBuilder: (context) {
-                    return SizedBox(
-                      height: minHeight,
-                      child: const Center(
-                          child: CircularProgressIndicator(
-                        strokeWidth: 1,
-                        color: Colors.red,
-                      )),
-                    );
-                  },
-                  // onFocusChanged: (focus) {
-                  //   debugPrint('has focus $focus');
-                  //   setState(() {
-                  //     _hasFocus = focus;
-                  //   });
-                  // },
-                  // onTextChanged: (text) => debugPrint('widget text change $text'),
-                  onEditorCreated: () {
-                    debugPrint('Editor has been loaded');
-                    // setHtmlText('Testing text on load');
-                  },
-                  onEditorResized: (height) => debugPrint('Editor resized $height'),
-                  // onSelectionChanged: (sel) => debugPrint('index ${sel.index}, range ${sel.length}'),
-                ),
               ),
             ],
           ),

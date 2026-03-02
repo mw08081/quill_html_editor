@@ -1039,6 +1039,7 @@ class ToolBarState extends State<ToolBar> {
         }
       },
       key: _fontColorKey,
+      position: ElTooltipPosition.bottomCenter,
       content: SizedBox(
         width: 200,
         height: 143,
@@ -1144,6 +1145,7 @@ class ToolBarState extends State<ToolBar> {
           _fontBgColorKey.currentState!.showOverlayOnTap();
         }
       },
+      position: ElTooltipPosition.bottomCenter,
       key: _fontBgColorKey,
       content: SizedBox(
         width: 200,
