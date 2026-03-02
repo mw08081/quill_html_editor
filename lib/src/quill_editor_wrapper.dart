@@ -83,7 +83,7 @@ class QuillHtmlEditor extends StatefulWidget {
   final Function(String)? onEditingComplete;
 
   /// [onPasteImage] calllback function that triggers on pasting image(base64) on editor
-  final Function(Uint8List)? onPasteImage;
+  final Function(Uint8List, String)? onPasteImage;
 
   ///[backgroundColor] to set the background color of the editor
   final Color backgroundColor;
@@ -403,11 +403,13 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
             DartCallback(
                 name: 'OnImagePasted',
                 callBack: (base64Str) async {
+                  final extension = base64Str.split(';').first.split('/').last.toString();
+
                   final pureBase64 = base64Str.toString().split(',').last;
                   final Uint8List imageBytes = base64Decode(pureBase64);
 
                   if (widget.onPasteImage != null) {
-                    widget.onPasteImage!(imageBytes);
+                    widget.onPasteImage!(imageBytes, extension);
                   }
                 })
           },
