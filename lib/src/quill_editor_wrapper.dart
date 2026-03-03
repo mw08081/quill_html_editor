@@ -24,6 +24,7 @@ class QuillHtmlEditor extends StatefulWidget {
   ///[QuillHtmlEditor] widget to display the quill editor,
   ///pass the controller to access the editor methods
   QuillHtmlEditor({
+    required this.isEditor,
     this.text,
     required this.controller,
     required this.minHeight,
@@ -35,6 +36,7 @@ class QuillHtmlEditor extends StatefulWidget {
     this.onEditorCreated,
     this.onSelectionChanged,
     this.onPasteImage,
+    this.onClickImageInViewer,
     this.padding = EdgeInsets.zero,
     this.hintTextPadding = EdgeInsets.zero,
     this.hintTextAlign = TextAlign.start,
@@ -57,6 +59,11 @@ class QuillHtmlEditor extends StatefulWidget {
       fontWeight: FontWeight.normal,
     ),
   }) : super(key: controller._editorKey);
+
+  /// custon variable
+  /// ijit will use this widget for editor and renderer
+  /// so init function is difference depends on  this value
+  final bool isEditor;
 
   /// [text] to set initial text to the editor, please use text
   /// We can also use the setText method for the same
@@ -84,6 +91,10 @@ class QuillHtmlEditor extends StatefulWidget {
 
   /// [onPasteImage] calllback function that triggers on pasting image(base64) on editor
   final Function(Uint8List, String)? onPasteImage;
+
+  /// [onClickImageInViewer] callback function that trigger on Click image on viewer(not editor == (isEditor ==
+  /// false))
+  final Function(String)? onClickImageInViewer;
 
   ///[backgroundColor] to set the background color of the editor
   final Color backgroundColor;
@@ -411,6 +422,14 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
                   if (widget.onPasteImage != null) {
                     widget.onPasteImage!(imageBytes, extension);
                   }
+                }),
+
+            DartCallback(
+                name: 'OnClickImageInViewer',
+                callBack: (src) {
+                  if (widget.onClickImageInViewer != null) {
+                    widget.onClickImageInViewer!(src);
+                  }
                 })
           },
           webSpecificParams: const WebSpecificParams(
@@ -449,7 +468,11 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
       if (widget.text != null) {
         _setHtmlTextToEditor(htmlText: widget.text!);
 
-        _bindImgEventOnLoad();
+        if (widget.isEditor) {
+          _bindEditorImgEventOnLoad();
+        } else {
+          _bindViewerImgEventOnLoad();
+        }
       }
       if (widget.autoFocus == true) {
         widget.controller.focus();
@@ -527,8 +550,13 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
   }
 
   /// a private method to bind event on image after load
-  Future _bindImgEventOnLoad() async {
-    return await _webviewController.callJsMethod("bindImgEventOnLoad", []);
+  Future _bindEditorImgEventOnLoad() async {
+    return await _webviewController.callJsMethod("bindEditorImgEventOnLoad", []);
+  }
+
+  /// a private method to bind event on image after load
+  Future _bindViewerImgEventOnLoad() async {
+    return await _webviewController.callJsMethod("bindViewerImgEventOnLoad", []);
   }
 
   Future _insertFileBoxToEditor({
@@ -1667,7 +1695,7 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
             
             
             // 커스텀 코드
-            function bindImgEventOnLoad() {
+            function bindEditorImgEventOnLoad() {
               document.addEventListener('click', function(e) {
                 
                 const img = e.target.closest('img');
@@ -1686,6 +1714,24 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
                 floatPanel.style.display = 'flex';
                 floatPanel.style.left = e.pageX + 'px';
                 floatPanel.style.top = e.pageY + 'px';
+              });
+            } 
+            
+            function bindViewerImgEventOnLoad() {
+              document.addEventListener('click', function(e) {
+                
+                const img = e.target.closest('img');
+                if (!img) return;
+            
+                const src = img.getAttribute('src');
+                if (src) {
+                  if($kIsWeb) {
+                      OnClickImageInViewer(src);
+                  } else {
+                      //OnClickImageInViewer.postMessage(src);
+                  }
+                }
+                  
               });
             } 
             

@@ -97,6 +97,7 @@ class _MyAppState extends State<MyApp> {
             children: [
               Expanded(
                 child: QuillHtmlEditor(
+                  isEditor: false,
                   text:
                       // '''<p><img src="https://storage.googleapis.com/ijit-public-gcs/user_uploads/3uZG6idIyb.png" width="50%"></p>''',
                       '''<p><img src="https://storage.googleapis.com/ijit-public-gcs/user_uploads/4vUpSmKTmy.png" style="width: 50%;" data-original-width="724"></p>''',
@@ -138,6 +139,8 @@ class _MyAppState extends State<MyApp> {
                   },
                   onEditorResized: (height) => debugPrint('Editor resized $height'),
                   // onSelectionChanged: (sel) => debugPrint('index ${sel.index}, range ${sel.length}'),
+                  //onPasteImage: ,
+                  onClickImageInViewer: (src) => print(src),
                 ),
               ),
               ToolBar(
