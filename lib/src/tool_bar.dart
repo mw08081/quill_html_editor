@@ -678,6 +678,7 @@ class ToolBarState extends State<ToolBar> {
                 controller: widget.controller,
                 type: UrlInputType.hyperlink,
                 onSubmit: (v) {
+                  print(v);
                   widget.controller.setFormat(format: 'link', value: v);
                 },
               ),
@@ -873,7 +874,7 @@ class ToolBarState extends State<ToolBar> {
   }
 
   Widget _getFontSizeWidget() {
-    final List<double> fontSizeList = [8, 11, 24, 36];
+    final List<double> fontSizeList = [8, 11, 17, 24];
     final List<String> fontSizeValue = ['small', 'normal', 'large', 'huge'];
     final fontSizeListIndex = fontSizeValue.indexOf(_formatMap['size'] ?? 'normal');
 
