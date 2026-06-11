@@ -1033,6 +1033,18 @@ class ToolBarState extends State<ToolBar> {
   }
 
   Widget _getFontColorWidget(int i) {
+    // 💡 방어 코드: _formatMap['color']가 어떤 타입으로 들어오든 문자열(String)로 안전하게 변환
+    String? safeColorStr;
+    if (_formatMap['color'] != null) {
+      if (_formatMap['color'] is Color) {
+        safeColorStr = (_formatMap['color'] as Color).toHex();
+      } else if (_formatMap['color'] is int) {
+        safeColorStr = '#${(_formatMap['color'] as int).toRadixString(16)}';
+      } else {
+        safeColorStr = _formatMap['color'].toString(); // String인 경우 포함
+      }
+    }
+
     return ElTooltip(
       onTap: () {
         if (_fontColorKey.currentState != null) {
@@ -1049,7 +1061,7 @@ class ToolBarState extends State<ToolBar> {
           child: GridView.builder(
             shrinkWrap: true,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 7, // 한 줄에 표시할 색상 수
+              crossAxisCount: 7,
               crossAxisSpacing: 4.0,
               mainAxisSpacing: 4.0,
             ),
@@ -1060,9 +1072,7 @@ class ToolBarState extends State<ToolBar> {
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(
-                          color: (fontColors[index] == Colors.white) ? Colors.black : fontColors[index], // Border color
-                          width: 0.001 // Border width
-                          ),
+                          color: (fontColors[index] == Colors.white) ? Colors.black : fontColors[index], width: 0.001),
                       shape: BoxShape.circle,
                       color: fontColors[index],
                     ),
@@ -1083,7 +1093,6 @@ class ToolBarState extends State<ToolBar> {
                 return GestureDetector(
                   onTap: () {
                     late Color newColor = fontColors[index];
-
                     _formatMap['color'] = newColor.toHex();
                     _toolbarList[i] = _toolbarList[i].copyWith(isActive: true);
                     widget.controller.setFormat(format: 'color', value: _formatMap['color']);
@@ -1095,14 +1104,13 @@ class ToolBarState extends State<ToolBar> {
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(
-                          color: (fontColors[index] == Colors.white) ? Colors.black : fontColors[index], // Border color
-                          width: 0.5 // Border width
-                          ),
+                          color: (fontColors[index] == Colors.white) ? Colors.black : fontColors[index], width: 0.5),
                       shape: BoxShape.circle,
                       color: fontColors[index],
                     ),
+                    // 🛠️ 수정된 부분: _formatMap['color'] 대신 위에서 정제한 safeColorStr 사용
                     child:
-                        (_formatMap['color'] != null && _formatMap['color'] == fontColors[index].toHex().toLowerCase())
+                        (safeColorStr != null && safeColorStr.toLowerCase() == fontColors[index].toHex().toLowerCase())
                             ? (Icon(
                                 Icons.check,
                                 size: 10,
@@ -1116,28 +1124,114 @@ class ToolBarState extends State<ToolBar> {
           ),
         ),
       ),
-      // content: ColorPicker(
-      //   onColorPicked: (color) {
-      //     _formatMap['color'] = color;
-      //     _toolbarList[i] = _toolbarList[i].copyWith(isActive: true);
-      //     widget.controller.setFormat(format: 'color', value: _formatMap['color']);
-      //     setState(() {});
-      //     if (_fontColorKey.currentState != null) {
-      //       _fontColorKey.currentState!.hideOverlay();
-      //     }
-      //   },
-      // ),
       child: Material(
         color: Colors.transparent,
         child: SizedBox(
           width: widget.iconSize,
           height: widget.iconSize,
+          // 🛠️ 수정된 부분: HexColor.fromHex 안에 안전한 문자열인 safeColorStr를 전달
           child: Icon(Icons.format_color_text_rounded,
-              color: _formatMap['color'] != null ? HexColor.fromHex(_formatMap['color']) : Colors.black),
+              color: safeColorStr != null ? HexColor.fromHex(safeColorStr) : Colors.black),
         ),
       ),
     );
   }
+
+  // Widget _getFontColorWidget(int i) {
+  //   return ElTooltip(
+  //     onTap: () {
+  //       if (_fontColorKey.currentState != null) {
+  //         _fontColorKey.currentState!.showOverlayOnTap();
+  //       }
+  //     },
+  //     key: _fontColorKey,
+  //     position: ElTooltipPosition.bottomCenter,
+  //     content: SizedBox(
+  //       width: 200,
+  //       height: 143,
+  //       child: Padding(
+  //         padding: const EdgeInsets.all(2.0),
+  //         child: GridView.builder(
+  //           shrinkWrap: true,
+  //           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+  //             crossAxisCount: 7, // 한 줄에 표시할 색상 수
+  //             crossAxisSpacing: 4.0,
+  //             mainAxisSpacing: 4.0,
+  //           ),
+  //           itemCount: fontColors.length,
+  //           itemBuilder: (context, index) {
+  //             if (index == 0) {
+  //               return GestureDetector(
+  //                 child: Container(
+  //                   decoration: BoxDecoration(
+  //                     border: Border.all(
+  //                         color: (fontColors[index] == Colors.white) ? Colors.black : fontColors[index], // Border color
+  //                         width: 0.001 // Border width
+  //                         ),
+  //                     shape: BoxShape.circle,
+  //                     color: fontColors[index],
+  //                   ),
+  //                   clipBehavior: Clip.hardEdge,
+  //                   child: const Icon(Icons.dnd_forwardslash_sharp, color: Colors.black),
+  //                 ),
+  //                 onTap: () {
+  //                   _formatMap['color'] = null;
+  //                   _toolbarList[i] = _toolbarList[i].copyWith(isActive: true);
+  //                   widget.controller.setFormat(format: 'color', value: _formatMap['color']);
+  //                   setState(() {});
+  //                   if (_fontColorKey.currentState != null) {
+  //                     _fontColorKey.currentState!.hideOverlay();
+  //                   }
+  //                 },
+  //               );
+  //             } else {
+  //               return GestureDetector(
+  //                 onTap: () {
+  //                   late Color newColor = fontColors[index];
+  //
+  //                   _formatMap['color'] = newColor.toHex();
+  //                   _toolbarList[i] = _toolbarList[i].copyWith(isActive: true);
+  //                   widget.controller.setFormat(format: 'color', value: _formatMap['color']);
+  //                   setState(() {});
+  //                   if (_fontColorKey.currentState != null) {
+  //                     _fontColorKey.currentState!.hideOverlay();
+  //                   }
+  //                 },
+  //                 child: Container(
+  //                   decoration: BoxDecoration(
+  //                     border: Border.all(
+  //                         color: (fontColors[index] == Colors.white) ? Colors.black : fontColors[index], // Border color
+  //                         width: 0.5 // Border width
+  //                         ),
+  //                     shape: BoxShape.circle,
+  //                     color: fontColors[index],
+  //                   ),
+  //                   child:
+  //                       (_formatMap['color'] != null && _formatMap['color'] == fontColors[index].toHex().toLowerCase())
+  //                           ? (Icon(
+  //                               Icons.check,
+  //                               size: 10,
+  //                               color: (fontColors[index] == Colors.white) ? Colors.black : Colors.white,
+  //                             ))
+  //                           : (null),
+  //                 ),
+  //               );
+  //             }
+  //           },
+  //         ),
+  //       ),
+  //     ),
+  //     child: Material(
+  //       color: Colors.transparent,
+  //       child: SizedBox(
+  //         width: widget.iconSize,
+  //         height: widget.iconSize,
+  //         child: Icon(Icons.format_color_text_rounded,
+  //             color: _formatMap['color'] != null ? HexColor.fromHex(_formatMap['color']) : Colors.black),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _getFontBackgroundColorWidget(int i) {
     return ElTooltip(
