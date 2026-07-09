@@ -75,28 +75,27 @@ class _MyAppState extends State<MyApp> {
         // 4. 추가된 마우스 휠 감지 로직
         if (data['action'] == 'MouseWheelScroll') {
           final deltaY = data['deltaY'];
-          final deltaX = data['deltaX'];
-          final currentOffset = data['currentOffset'];
-          final maxOffset = data['maxOffset'];
+          // final deltaX = data['deltaX'];
+          // final currentOffset = data['currentOffset'];
+          // final maxOffset = data['maxOffset'];
 
           // 안전하게 num 타입으로 변환
           final numY = (deltaY is num) ? deltaY : num.parse(deltaY.toString());
-          final numX = (deltaX is num) ? deltaX : num.parse(deltaX.toString());
-          final numCurrent = (currentOffset is num) ? currentOffset : num.parse(currentOffset.toString());
-          final numMax = (maxOffset is num) ? maxOffset : num.parse(maxOffset.toString());
+          // final numX = (deltaX is num) ? deltaX : num.parse(deltaX.toString());
+          // final numCurrent = (currentOffset is num) ? currentOffset : num.parse(currentOffset.toString());
+          // final numMax = (maxOffset is num) ? maxOffset : num.parse(maxOffset.toString());
 
-          if (mounted) {
-            print('[플러터] 휠 감지 -> deltaY: $numY');
-            print('[플러터] 오프셋 상태 -> 현재: $numCurrent / 최대: $numMax');
+          if (mounted && sc.hasClients) {
+            double newOffset = sc.offset + numY;
 
-            // 활용 예시: 스크롤이 맨 밑바닥에 닿았는지 체크 (오차범위 1px 대입)
-            if (numCurrent >= numMax - 1 && numY > 0) {
-              print('[플러터] 최하단(바닥)에 도달했습니다!');
+            if (newOffset < 0) {
+              newOffset = 0;
+            } else if (newOffset > sc.position.maxScrollExtent) {
+              newOffset = sc.position.maxScrollExtent;
             }
-            // 활용 예시: 스크롤이 맨 위에 닿았는지 체크
-            else if (numCurrent <= 0 && numY < 0) {
-              print('[플러터] 최상단(맨 위)에 도달했습니다!');
-            }
+
+            print(newOffset);
+            sc.jumpTo(newOffset);
           }
         }
       } catch (e) {
