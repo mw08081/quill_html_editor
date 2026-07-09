@@ -1059,24 +1059,90 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
         </div> 
         </div>
       
+        <script>
+
+// 1. 각 이벤트에 대응할 핸들러 함수들을 이름을 지어서 정의합니다.
+function handleWheel(event) {
+  sendScrollMessage(event.deltaY, event.deltaX);
+}
+
+// 누적 이동량을 저장할 전역 변수 (기존 변수 선언부에 함께 배치하거나 함수 밖에 선언)
+if (typeof accumulatedDeltaY === 'undefined') {
+  var accumulatedDeltaY = 0;
+  var accumulatedDeltaX = 0;
+}
+let touchStartY = 0;
+let touchStartX = 0;
+let lastSentDeltaY = 0; // 직전에 보낸 방향을 기억하기 위한 변수
+
+function handleTouchStart(event) {
+  // 처음 터치한 순간의 고정 좌표
+  touchStartY = event.touches[0].pageY;
+  touchStartX = event.touches[0].pageX;
+  lastSentDeltaY = 0; 
+}
+
+function handleTouchMove(event) {
+  const currentY = event.touches[0].pageY;
+  const currentX = event.touches[0].pageX;
+
+  // 최초 터치 지점으로부터 손가락이 움직인 총 거리
+  let deltaY = touchStartY - currentY;
+  let deltaX = touchStartX - currentX;
+
+  // [핵심 방어 코드] 사용자는 아래로 내리고 있는데 (deltaY가 양수여야 함)
+  // 화면이 출렁이면서 순간적으로 음수(-)나 엉뚱한 리바운드 값이 들어오면 무시합니다.
+  // 손가락 움직임의 누적 절대 방향성을 유지합니다.
+  if (Math.abs(deltaY) > 5) {
+    
+    // 마우스 휠 느낌을 내기 위해 변화량(속도)을 조절합니다.
+    // 값이 요동치는 것을 막기 위해 정수로 딱 끊어 보냅니다.
+    const finalDeltaY = Math.round(deltaY * 1.3); 
+    const finalDeltaX = Math.round(deltaX * 1.3);
+
+    // 플러터 화면 이동으로 인한 리바운드 튕김 현상을 방지하기 위해 
+    // 동일한 터치 드래그 안에서 부호가 급격히 바뀌면 전송하지 않습니다.
+    if (lastSentDeltaY !== 0 && (lastSentDeltaY * finalDeltaY < 0)) {
+       // 방향이 반대로 뒤집히는 순간 팅김 노이즈로 간주하고 차단
+       return; 
+    }
+
+    sendScrollMessage(finalDeltaY, finalDeltaX);
+    lastSentDeltaY = finalDeltaY;
+
+    // 다음 미세 움직임 비교를 위해 기준점을 현재로 아주 살짝 보정
+    touchStartY = currentY;
+    touchStartX = currentX;
+  }
+}
+
+function sendScrollMessage(deltaY, deltaX) {
+  window.parent.postMessage(JSON.stringify({
+    'action': 'MouseWheelScroll',
+    'deltaY': deltaY,
+    'deltaX': deltaX
+  }), '*');
+}
+
+// ==========================================
+// [핵심] 기존 리스너가 있다면 제거 후 새로 등록 (중복 방지)
+// ==========================================
+
+// 마우스 휠 안전 등록
+window.removeEventListener('wheel', handleWheel);
+window.addEventListener('wheel', handleWheel);
+
+// 터치 시작 안전 등록
+window.removeEventListener('touchstart', handleTouchStart);
+window.addEventListener('touchstart', handleTouchStart, { passive: true });
+
+// 터치 이동 안전 등록
+window.removeEventListener('touchmove', handleTouchMove);
+window.addEventListener('touchmove', handleTouchMove, { passive: true });
+</script>
+      
         <!-- Initialize Quill editor -->
         <script>
-        
-            window.addEventListener('wheel', (event) => {
-              const currentOffset = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-              const maxOffset = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            
-              const payload = JSON.stringify({
-                'action': 'MouseWheelScroll',
-                'deltaY': event.deltaY,
-                'deltaX': event.deltaX,
-                'currentOffset': currentOffset,
-                'maxOffset': maxOffset
-              });
-            
-              window.parent.postMessage(payload, '*');
-            });
-      
             let fullWindowHeight = window.innerHeight;
             let keyboardIsProbablyOpen = false;
             window.addEventListener("resize", function() {
