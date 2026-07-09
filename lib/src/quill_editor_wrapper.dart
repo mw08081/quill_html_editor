@@ -1061,6 +1061,21 @@ class QuillHtmlEditorState extends State<QuillHtmlEditor> {
       
         <!-- Initialize Quill editor -->
         <script>
+        
+            window.addEventListener('wheel', (event) => {
+              const currentOffset = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+              const maxOffset = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            
+              const payload = JSON.stringify({
+                'action': 'MouseWheelScroll',
+                'deltaY': event.deltaY,
+                'deltaX': event.deltaX,
+                'currentOffset': currentOffset,
+                'maxOffset': maxOffset
+              });
+            
+              window.parent.postMessage(payload, '*');
+            });
       
             let fullWindowHeight = window.innerHeight;
             let keyboardIsProbablyOpen = false;

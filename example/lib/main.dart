@@ -56,14 +56,52 @@ class _MyAppState extends State<MyApp> {
     });
 
     html.window.onMessage.listen((html.MessageEvent event) {
-      final data = event.data; // String 또는 dynamic
+      if (event.data == null) return;
 
-      if (data['action'] == 'GetEmbeddedImageHeight') {
-        final value = data['value'];
-        final intValue = (value is int) ? value : int.parse(value.toString());
-        if (mounted) {
-          print('GetEmbeddedImageHeight: $intValue');
+      try {
+        // 2. 전달받은 데이터를 문자열로 취급하여 JSON 파싱을 진행합니다.
+        final String rawString = event.data.toString();
+        final Map<String, dynamic> data = jsonDecode(rawString) as Map<String, dynamic>;
+
+        // 3. 기존 이미지 높이 감지 로직
+        if (data['action'] == 'GetEmbeddedImageHeight') {
+          final value = data['value'];
+          final intValue = (value is int) ? value : int.parse(value.toString());
+          if (mounted) {
+            print('GetEmbeddedImageHeight: $intValue');
+          }
         }
+
+        // 4. 추가된 마우스 휠 감지 로직
+        if (data['action'] == 'MouseWheelScroll') {
+          final deltaY = data['deltaY'];
+          final deltaX = data['deltaX'];
+          final currentOffset = data['currentOffset'];
+          final maxOffset = data['maxOffset'];
+
+          // 안전하게 num 타입으로 변환
+          final numY = (deltaY is num) ? deltaY : num.parse(deltaY.toString());
+          final numX = (deltaX is num) ? deltaX : num.parse(deltaX.toString());
+          final numCurrent = (currentOffset is num) ? currentOffset : num.parse(currentOffset.toString());
+          final numMax = (maxOffset is num) ? maxOffset : num.parse(maxOffset.toString());
+
+          if (mounted) {
+            print('[플러터] 휠 감지 -> deltaY: $numY');
+            print('[플러터] 오프셋 상태 -> 현재: $numCurrent / 최대: $numMax');
+
+            // 활용 예시: 스크롤이 맨 밑바닥에 닿았는지 체크 (오차범위 1px 대입)
+            if (numCurrent >= numMax - 1 && numY > 0) {
+              print('[플러터] 최하단(바닥)에 도달했습니다!');
+            }
+            // 활용 예시: 스크롤이 맨 위에 닿았는지 체크
+            else if (numCurrent <= 0 && numY < 0) {
+              print('[플러터] 최상단(맨 위)에 도달했습니다!');
+            }
+          }
+        }
+      } catch (e) {
+        // 혹시라도 다른 형태의 데이터가 들어와 에러가 나면 멈추지 않고 로그만 출력
+        print('[onMessage 파싱 에러]: $e');
       }
     });
 
@@ -92,10 +130,10 @@ class _MyAppState extends State<MyApp> {
       child: Scaffold(
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: true,
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 200),
-          child: SingleChildScrollView(
-            controller: sc,
+        body: SingleChildScrollView(
+          controller: sc,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 200),
             child: Column(
               children: [
                 ToolBar(
@@ -207,12 +245,12 @@ class _MyAppState extends State<MyApp> {
                   ],
                 ),
                 SizedBox(
-                  height: 5000,
+                  // height: 5000,
                   child: QuillHtmlEditor(
                     isEditor: false,
                     text:
                         // '''<p><img src="https://storage.googleapis.com/ijit-public-gcs/user_uploads/3uZG6idIyb.png" width="50%"></p>''',
-                        '''<p><img src="https://storage.googleapis.com/ijit-public-gcs/user_uploads/4vUpSmKTmy.png" style="width: 50%;" data-original-width="724"></p>''',
+                        '''<p><img src="https://storage.googleapis.com/ijit-public-gcs/user_uploads/4vUpSmKTmy.png" style="width: 50%;" data-original-width="724" alt=""></p>''',
                     // text: null,
                     hintText: 'Hint text goes here',
                     controller: controller,
@@ -238,24 +276,15 @@ class _MyAppState extends State<MyApp> {
                         )),
                       );
                     },
-                    // onFocusChanged: (focus) {
-                    //   debugPrint('has focus $focus');
-                    //   setState(() {
-                    //     _hasFocus = focus;
-                    //   });
-                    // },
-                    // onTextChanged: (text) => debugPrint('widget text change $text'),
                     onEditorCreated: () {
                       debugPrint('Editor has been loaded');
-                      // setHtmlText('Testing text on load');
                     },
                     onEditorResized: (height) => debugPrint('Editor resized $height'),
-                    // onSelectionChanged: (sel) => debugPrint('index ${sel.index}, range ${sel.length}'),
-                    //onPasteImage: ,
                     onClickImageInViewer: (src) => print(src),
                   ),
                 ),
-                SizedBox(
+                Container(
+                  color: Colors.lightGreenAccent,
                   height: 10000,
                 ),
               ],
